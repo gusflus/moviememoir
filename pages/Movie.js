@@ -15,8 +15,6 @@ const Movie = ({ route }) => {
   const [json, setJson] = useState(null);
   const [credits, setCredits] = useState(null);
 
-  const id = 22582;
-
   useEffect(() => {
     handleFetch();
     handleFetchCredits();
@@ -24,7 +22,7 @@ const Movie = ({ route }) => {
 
   const handleFetch = () => {
     fetch(
-      `https://api.themoviedb.org/3/movie/${id}?api_key=${TMDB_API_KEY}&language=en-US`
+      `https://api.themoviedb.org/3/movie/${route.params.id}?api_key=${TMDB_API_KEY}&language=en-US`
     )
       .then((response) => response.json())
       .then((jsonData) => {
@@ -37,7 +35,7 @@ const Movie = ({ route }) => {
 
   const handleFetchCredits = () => {
     fetch(
-      `https://api.themoviedb.org/3/movie/${id}/credits?api_key=${TMDB_API_KEY}&language=en-US`
+      `https://api.themoviedb.org/3/movie/${route.params.id}/credits?api_key=${TMDB_API_KEY}&language=en-US`
     )
       .then((response) => response.json())
       .then((jsonData) => {
@@ -72,7 +70,10 @@ const Movie = ({ route }) => {
           <View style={styles.ratingContainer}>
             <Text style={styles.subTitle}>Your Rating:</Text>
             <View style={styles.center}>
-              <RatingBar styles={styles.userRating} progress={7} />
+              <RatingBar
+                styles={styles.userRating}
+                progress={route.params.rating}
+              />
             </View>
             <Text style={styles.subTitle}>Average Rating:</Text>
             <View style={styles.center}>

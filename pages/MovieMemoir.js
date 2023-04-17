@@ -6,17 +6,23 @@ import {
   Keyboard,
   TouchableOpacity,
   TouchableWithoutFeedback,
+  ScrollView,
 } from "react-native";
 import React from "react";
 import { useState, useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { auth, firestore } from "../Firebase";
 
+import MovieCard from "../components/MovieCard";
+
+import { TMDB_API_KEY } from "@env";
 import { colors } from "../components/Colors";
 
 const MovieMemoir = () => {
-  const [title, setTitle] = useState("");
+  const [id, setId] = useState("");
   const [rating, setRating] = useState("");
+  const [watchedMovies, setWatchedMovies] = useState([]);
+  const [movieUrls, setMovieUrls] = useState([]);
   const [tempWatched, setTempWatched] = useState([]);
   const navigation = useNavigation();
 
@@ -35,10 +41,18 @@ const MovieMemoir = () => {
         querySnapshot.forEach((watchedMovie) => {
           setTempWatched((tempWatched) => [
             ...tempWatched,
-            { ...watchedMovie.data(), id: watchedMovie.id },
+            { ...watchedMovie.data(), fbid: watchedMovie.id },
           ]);
         });
       });
+
+    setMovieUrls([]);
+    getMovieImages();
+  };
+
+  const handleSignOut = () => {
+    auth.signOut();
+    navigation.replace("Login");
   };
 
   handlePushToFirestore = () => {
@@ -47,7 +61,7 @@ const MovieMemoir = () => {
       .doc(auth.currentUser.uid)
       .collection("watched")
       .add({
-        title: title,
+        id: id,
         rating: rating,
       })
       .then(() => {
@@ -56,46 +70,52 @@ const MovieMemoir = () => {
 
     refresh();
   };
+
+  const getMovieImages = () => {};
+
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <View style={styles.container}>
-        <TextInput
-          placeholder="title"
-          value={title}
-          onChangeText={(text) => setTitle(text)}
-          style={styles.input}
-        />
-        <TextInput
-          placeholder="rating"
-          value={rating}
-          onChangeText={(text) => setRating(text)}
-          style={styles.input}
-          keyboardType="numeric"
-        />
+      <ScrollView contentContainerStyle={{ flex: 1 }}>
+        <View style={styles.container}>
+          <TextInput
+            placeholder="id"
+            value={id}
+            onChangeText={(text) => setId(text)}
+            style={styles.input}
+          />
+          <TextInput
+            placeholder="rating"
+            value={rating}
+            onChangeText={(text) => setRating(text)}
+            style={styles.input}
+            keyboardType="numeric"
+          />
 
-        <TouchableOpacity onPress={handlePushToFirestore} style={styles.button}>
-          <Text>push to firestore</Text>
-        </TouchableOpacity>
+          <TouchableOpacity
+            onPress={handlePushToFirestore}
+            style={styles.button}
+          >
+            <Text>push to firestore</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={handleSignOut}
+            style={[styles.button, { marginBottom: 15 }]}
+          >
+            <Text>sign out</Text>
+          </TouchableOpacity>
 
-        {tempWatched.map((movie) => {
-          return (
-            <TouchableOpacity
-              onPress={() => {
-                navigation.navigate("Movie", {
-                  fbid: movie.id,
-                  id: "22582",
-                });
-              }}
-              key={movie.title}
-            >
-              <View style={styles.watchedContainer}>
-                <Text>{movie.title}</Text>
-                <Text>{movie.rating}</Text>
-              </View>
-            </TouchableOpacity>
-          );
-        })}
-      </View>
+          {tempWatched.map((movie) => {
+            return (
+              <MovieCard
+                key={movie.fbid}
+                id={movie.id}
+                rating={movie.rating}
+                image={movieUrls[movie.id]}
+              />
+            );
+          })}
+        </View>
+      </ScrollView>
     </TouchableWithoutFeedback>
   );
 };

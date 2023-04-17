@@ -7,7 +7,7 @@ import Movie from "./Movie";
 const MainNavigation = () => {
   const Stack = createNativeStackNavigator();
   return (
-    <Stack.Navigator initialRouteName="Movie">
+    <Stack.Navigator initialRouteName="MovieMemoir">
       <Stack.Screen
         name="MovieMemoir"
         component={MovieMemoir}

@@ -1,5 +1,4 @@
 import {
-  KeyboardAvoidingView,
   StyleSheet,
   Text,
   TextInput,
@@ -8,7 +7,6 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   Image,
-  AsyncStorage,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { useState, useEffect } from "react";
@@ -17,12 +15,14 @@ import { colors } from "../components/Colors";
 
 const Login = () => {
   const navigation = useNavigation();
+  const [user, setUser] = useState(null);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   useEffect(() => {
     const unsubscrbe = auth.onAuthStateChanged((user) => {
       if (user) {
+        console.log("authStateChanged -> logged in: " + user.email);
         navigation.replace("MainNavigation");
       }
     });
