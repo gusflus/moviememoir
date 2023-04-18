@@ -1,26 +1,26 @@
 import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
-import TabNavigation from "./TabNavigation";
-import Movie from "./Movie";
+import Home from "./Home";
+import Media from "./Media";
 
-const MainNavigation = () => {
+const HomeNavigation = () => {
   const Stack = createNativeStackNavigator();
 
   return (
     <Stack.Navigator initialRouteName="TabNavigation">
       <Stack.Screen
-        name="TabNavigation"
-        component={TabNavigation}
+        name="Home"
+        component={Home}
         options={{ headerShown: false }}
       />
       <Stack.Screen
-        name="Movie"
-        component={Movie}
+        name="Media"
+        component={Media}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>
   );
 };
 
-export default MainNavigation;
+export default HomeNavigation;

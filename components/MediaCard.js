@@ -11,14 +11,14 @@ import React from "react";
 
 import { colors } from "./Colors";
 
-const MovieCard = ({ id, image, rating }) => {
+const MediaCard = ({ id, image, rating, type }) => {
   const navigation = useNavigation();
   const width = Dimensions.get("window").width;
 
   return (
     <TouchableOpacity
       onPress={() => {
-        navigation.navigate("Movie", { id: id, rating: rating });
+        navigation.navigate("Media", { id: id, rating: rating, type: type });
       }}
     >
       <View style={[styles.container, { width: width * 0.4 }]}>
@@ -34,7 +34,7 @@ const MovieCard = ({ id, image, rating }) => {
   );
 };
 
-export default MovieCard;
+export default MediaCard;
 
 const styles = StyleSheet.create({
   container: {

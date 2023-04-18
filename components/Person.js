@@ -12,7 +12,7 @@ const Person = ({ image, name, role }) => {
       />
       <View style={styles.overlay}>
         <Text style={styles.text}>{name}</Text>
-        <Text style={styles.text}>{role}</Text>
+        <Text style={styles.role}>as: {role}</Text>
       </View>
     </View>
   );
@@ -47,7 +47,12 @@ const styles = StyleSheet.create({
   },
   text: {
     color: colors.light,
-    fontSize: 16,
+    fontSize: 18,
+    textAlign: "center",
+  },
+  role: {
+    color: colors.light,
+    fontSize: 12,
     textAlign: "center",
   },
 });

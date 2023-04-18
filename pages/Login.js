@@ -23,7 +23,7 @@ const Login = () => {
     const unsubscrbe = auth.onAuthStateChanged((user) => {
       if (user) {
         console.log("authStateChanged -> logged in: " + user.email);
-        navigation.replace("MainNavigation");
+        navigation.replace("TabNavigation");
       }
     });
 

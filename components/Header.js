@@ -51,7 +51,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     left: 66,
     top: 71,
-    fontSize: 22,
+    fontSize: 27,
     marginRight: 15,
     fontWeight: "bold",
     color: colors.primary,

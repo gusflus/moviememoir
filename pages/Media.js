@@ -11,7 +11,7 @@ import Person from "../components/Person";
 
 import { colors } from "../components/Colors";
 
-const Movie = ({ route }) => {
+const Media = ({ route }) => {
   const [json, setJson] = useState(null);
   const [credits, setCredits] = useState(null);
 
@@ -59,7 +59,11 @@ const Movie = ({ route }) => {
         end={{ x: 1, y: 1 }}
       />
       <Header title={json.original_title} back={true} />
-      <ScrollView>
+      <ScrollView
+        contentContainerStyle={{
+          paddingBottom: 60,
+        }}
+      >
         <View style={styles.container}>
           <Image
             source={{
@@ -107,7 +111,7 @@ const Movie = ({ route }) => {
   );
 };
 
-export default Movie;
+export default Media;
 
 const styles = StyleSheet.create({
   container: {

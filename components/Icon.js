@@ -12,7 +12,11 @@ const Icon = ({ iconName, focused }) => {
       <View
         style={[focused ? styles.front : styles.back, { width: width * 0.5 }]}
       >
-        <MaterialCommunityIcons name={iconName} size={24} color="black" />
+        <MaterialCommunityIcons
+          name={iconName}
+          size={24}
+          color={focused ? colors.primary : colors.dark}
+        />
       </View>
     </View>
   );
@@ -22,23 +26,25 @@ export default Icon;
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     justifyContent: "center",
     alignItems: "center",
   },
   front: {
-    backgroundColor: colors.primary,
-    borderTopLeftRadius: 30,
-    borderTopRightRadius: 30,
-    height: 90,
+    backgroundColor: colors.dark,
+    borderTopLeftRadius: 23,
+    borderTopRightRadius: 23,
+    height: 70,
     justifyContent: "center",
     alignItems: "center",
   },
   back: {
-    top: 20,
-    backgroundColor: colors.dark,
-    borderTopLeftRadius: 30,
-    borderTopRightRadius: 30,
-    height: 90,
+    top: 10,
+    backgroundColor: colors.secondary,
+    borderTopLeftRadius: 23,
+    borderTopRightRadius: 23,
+    height: 70,
+    paddingBottom: 15,
     justifyContent: "center",
     alignItems: "center",
   },

@@ -1,11 +1,10 @@
 import { StyleSheet, Text, View } from "react-native";
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 import Icon from "../components/Icon";
-import MovieMemoir from "./MovieMemoir";
-import Search from "./Search";
+import HomeNavigation from "./HomeNavigation";
+import SearchNavigation from "./SearchNavigation";
 
 const TabNavigation = () => {
   const Tab = createBottomTabNavigator();
@@ -17,10 +16,10 @@ const TabNavigation = () => {
           let iconName;
 
           switch (route.name) {
-            case "MovieMemoir":
+            case "HomeNavigation":
               iconName = focused ? "film" : "film";
               break;
-            case "Search":
+            case "SearchNavigation":
               iconName = focused ? "magnify" : "magnify";
               break;
           }
@@ -28,13 +27,18 @@ const TabNavigation = () => {
           return <Icon iconName={iconName} focused={focused} />;
         },
       })}
+      tabBarOptions={{ tabBarVisible: false }}
     >
       <Tab.Screen
-        name="MovieMemoir"
+        name="HomeNavigation"
         options={styles.tab}
-        component={MovieMemoir}
+        component={HomeNavigation}
       />
-      <Tab.Screen name="Search" options={styles.tab} component={Search} />
+      <Tab.Screen
+        name="SearchNavigation"
+        options={styles.tab}
+        component={SearchNavigation}
+      />
     </Tab.Navigator>
   );
 };
@@ -45,9 +49,11 @@ const styles = StyleSheet.create({
   tab: {
     headerShown: false,
     tabBarShowLabel: false,
+    tabBarVisible: false,
     tabBarStyle: {
       position: "absolute",
-      height: 60,
+      backgroundColor: "transparent",
+      height: 20,
     },
   },
 });
