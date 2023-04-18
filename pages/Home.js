@@ -21,6 +21,7 @@ import { colors } from "../components/Colors";
 const Home = () => {
   const [id, setId] = useState("");
   const [rating, setRating] = useState("");
+  const [type, setType] = useState("");
   const [tempWatched, setTempWatched] = useState([]);
   const [images, setImages] = useState({});
   const navigation = useNavigation();
@@ -56,9 +57,11 @@ const Home = () => {
       .collection("users")
       .doc(auth.currentUser.uid)
       .collection("watched")
-      .add({
-        id: id,
+      .doc(id)
+      .set({
         rating: rating,
+        type: "movie",
+        id: id,
       })
       .then(() => {
         console.log("added to firestore");
@@ -67,16 +70,31 @@ const Home = () => {
     refresh();
   };
 
-  const getImage = async (id) => {
-    const url = `https://api.themoviedb.org/3/movie/${id}?api_key=${TMDB_API_KEY}&language=en-US`;
-    const response = await fetch(url);
-    const data = await response.json();
-    setImages((prevImages) => {
-      return {
-        ...prevImages,
-        [id]: data.poster_path,
-      };
-    });
+  const getImage = async (type, id) => {
+    let url;
+    switch (type) {
+      case "movie":
+        url = `https://api.themoviedb.org/3/movie/${id}?api_key=${TMDB_API_KEY}&language=en-US`;
+        break;
+      case "tv":
+        url = `https://api.themoviedb.org/3/tv/${id}?api_key=${TMDB_API_KEY}&language=en-US`;
+        break;
+      case "person":
+        url = `https://api.themoviedb.org/3/person/${id}?api_key=${TMDB_API_KEY}&language=en-US`;
+        break;
+    }
+
+    fetch(url)
+      .then((response) => response.json())
+      .then((jsonData) => {
+        const data = jsonData;
+        setImages((prevImages) => {
+          return {
+            ...prevImages,
+            [id]: data.poster_path,
+          };
+        });
+      });
   };
 
   return (
@@ -127,13 +145,14 @@ const Home = () => {
             {tempWatched.map((media) => {
               const image = images[media.id];
               if (!image) {
-                getImage(media.id);
+                getImage(media.type, media.id);
               }
               return (
                 <MediaCard
                   id={media.id}
                   rating={media.rating}
                   image={image}
+                  type={media.type}
                   key={media.id}
                 />
               );

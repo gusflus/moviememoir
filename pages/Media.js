@@ -21,9 +21,23 @@ const Media = ({ route }) => {
   }, []);
 
   const handleFetch = () => {
-    fetch(
-      `https://api.themoviedb.org/3/movie/${route.params.id}?api_key=${TMDB_API_KEY}&language=en-US`
-    )
+    let url;
+    switch (route.params.type) {
+      case "movie":
+        url = `https://api.themoviedb.org/3/movie/${route.params.id}?api_key=${TMDB_API_KEY}&language=en-US`;
+        break;
+      case "tv":
+        url = `https://api.themoviedb.org/3/tv/${route.params.id}?api_key=${TMDB_API_KEY}&language=en-US`;
+        break;
+      case "person":
+        url = `https://api.themoviedb.org/3/person/${route.params.id}?api_key=${TMDB_API_KEY}&language=en-US`;
+        break;
+      default:
+        console.log("(Media.js) Invalid category: " + route.params.type);
+        break;
+    }
+
+    fetch(url)
       .then((response) => response.json())
       .then((jsonData) => {
         setJson(jsonData);
@@ -34,9 +48,24 @@ const Media = ({ route }) => {
   };
 
   const handleFetchCredits = () => {
-    fetch(
-      `https://api.themoviedb.org/3/movie/${route.params.id}/credits?api_key=${TMDB_API_KEY}&language=en-US`
-    )
+    let url;
+    switch (route.params.type) {
+      case "movie":
+        url = `https://api.themoviedb.org/3/movie/${route.params.id}/credits?api_key=${TMDB_API_KEY}&language=en-US`;
+        break;
+      case "tv":
+        url = `https://api.themoviedb.org/3/tv/${route.params.id}/credits?api_key=${TMDB_API_KEY}&language=en-US`;
+        break;
+      case "person":
+        url = `https://api.themoviedb.org/3/person/${route.params.id}/credits?api_key=${TMDB_API_KEY}&language=en-US`;
+        break;
+      default:
+        console.log(
+          "(Media.js - credits) Invalid category: " + route.params.type
+        );
+        break;
+    }
+    fetch(url)
       .then((response) => response.json())
       .then((jsonData) => {
         setCredits(jsonData);

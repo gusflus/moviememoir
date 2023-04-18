@@ -15,7 +15,6 @@ import { colors } from "../components/Colors";
 
 const Login = () => {
   const navigation = useNavigation();
-  const [user, setUser] = useState(null);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 

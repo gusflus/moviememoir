@@ -27,7 +27,6 @@ const TabNavigation = () => {
           return <Icon iconName={iconName} focused={focused} />;
         },
       })}
-      tabBarOptions={{ tabBarVisible: false }}
     >
       <Tab.Screen
         name="HomeNavigation"
@@ -53,7 +52,7 @@ const styles = StyleSheet.create({
     tabBarStyle: {
       position: "absolute",
       backgroundColor: "transparent",
-      height: 20,
+      height: 2,
     },
   },
 });
