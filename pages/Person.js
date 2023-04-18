@@ -81,7 +81,7 @@ const Person = ({ route }) => {
                       id={media.id}
                       image={media.poster_path}
                       name={media.title}
-                      type={media.type}
+                      type={media.media_type}
                       key={media.id}
                     />
                   );

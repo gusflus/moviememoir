@@ -11,14 +11,18 @@ import React from "react";
 
 import { colors } from "./Colors";
 
-const MediaCard = ({ id, name, image, rating, type }) => {
+const MediaCard = ({ id, image, rating, type }) => {
   const navigation = useNavigation();
   const width = Dimensions.get("window").width;
 
   return (
     <TouchableOpacity
       onPress={() => {
-        navigation.navigate("Media", { id: id, rating: rating, type: type });
+        navigation.push("Media", {
+          id: id,
+          rating: rating,
+          type: type,
+        });
       }}
     >
       <View style={[styles.container, { width: width * 0.4 }]}>

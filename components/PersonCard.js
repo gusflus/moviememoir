@@ -18,17 +18,19 @@ const PersonCard = ({ id, image, name, role }) => {
   return (
     <TouchableOpacity
       onPress={() => {
-        navigation.navigate("Person", { id: id });
+        navigation.push("Person", { id: id });
       }}
     >
-      <View style={styles.container}>
+      <View style={[styles.container, { width: width * 0.4 }]}>
         <Image
           source={{ uri: `https://image.tmdb.org/t/p/w500${image}` }}
           style={styles.image}
         />
         <View style={styles.overlay}>
           <Text style={styles.text}>{name}</Text>
-          <Text style={styles.role}>as: {role}</Text>
+          <Text style={styles.role}>
+            {role == undefined ? "" : `as: ${role}`}
+          </Text>
         </View>
       </View>
     </TouchableOpacity>
@@ -39,16 +41,14 @@ export default PersonCard;
 
 const styles = StyleSheet.create({
   container: {
-    width: 150,
     height: 250,
     marginHorizontal: 15,
     marginTop: 20,
   },
   image: {
-    width: 150,
     height: 250,
     resizeMode: "cover",
-    borderRadius: 20,
+    borderRadius: 15,
   },
   overlay: {
     position: "absolute",
@@ -59,12 +59,12 @@ const styles = StyleSheet.create({
     bottom: 0,
     height: "25%",
     backgroundColor: colors.dark_transparent,
-    borderBottomLeftRadius: 20,
-    borderBottomRightRadius: 20,
+    borderBottomLeftRadius: 15,
+    borderBottomRightRadius: 15,
   },
   text: {
     color: colors.light,
-    fontSize: 18,
+    fontSize: 16,
     textAlign: "center",
   },
   role: {

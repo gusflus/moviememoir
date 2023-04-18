@@ -87,7 +87,10 @@ const Media = ({ route }) => {
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 1 }}
       />
-      <Header title={json.original_title} back={true} />
+      <Header
+        title={json.title == undefined ? json.name : json.title}
+        back={true}
+      />
       <ScrollView
         contentContainerStyle={{
           paddingBottom: 60,

@@ -3,8 +3,8 @@ import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
 import Icon from "../components/Icon";
-import HomeNavigation from "./HomeNavigation";
-import SearchNavigation from "./SearchNavigation";
+import HomeStack from "./HomeStack";
+import SearchStack from "./SearchStack";
 
 const TabNavigation = () => {
   const Tab = createBottomTabNavigator();
@@ -16,10 +16,10 @@ const TabNavigation = () => {
           let iconName;
 
           switch (route.name) {
-            case "HomeNavigation":
+            case "HomeStack":
               iconName = focused ? "film" : "film";
               break;
-            case "SearchNavigation":
+            case "SearchStack":
               iconName = focused ? "magnify" : "magnify";
               break;
           }
@@ -28,15 +28,11 @@ const TabNavigation = () => {
         },
       })}
     >
+      <Tab.Screen name="HomeStack" options={styles.tab} component={HomeStack} />
       <Tab.Screen
-        name="HomeNavigation"
+        name="SearchStack"
         options={styles.tab}
-        component={HomeNavigation}
-      />
-      <Tab.Screen
-        name="SearchNavigation"
-        options={styles.tab}
-        component={SearchNavigation}
+        component={SearchStack}
       />
     </Tab.Navigator>
   );

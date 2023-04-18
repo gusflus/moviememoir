@@ -3,8 +3,9 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import Search from "./Search";
 import Media from "./Media";
+import Person from "./Person";
 
-const SearchNavigation = () => {
+const SearchStack = () => {
   const Stack = createNativeStackNavigator();
 
   return (
@@ -28,4 +29,4 @@ const SearchNavigation = () => {
   );
 };
 
-export default SearchNavigation;
+export default SearchStack;

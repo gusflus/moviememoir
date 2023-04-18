@@ -5,7 +5,7 @@ import Home from "./Home";
 import Media from "./Media";
 import Person from "./Person";
 
-const HomeNavigation = () => {
+const HomeStack = () => {
   const Stack = createNativeStackNavigator();
 
   return (
@@ -29,4 +29,4 @@ const HomeNavigation = () => {
   );
 };
 
-export default HomeNavigation;
+export default HomeStack;

@@ -17,6 +17,7 @@ import { TMDB_API_KEY } from "@env";
 import Header from "../components/Header";
 import Searchbar from "../components/Searchbar";
 import MediaCard from "../components/MediaCard";
+import PersonCard from "../components/PersonCard";
 
 const Search = () => {
   const [trending, setTrending] = useState([]);
@@ -75,19 +76,25 @@ const Search = () => {
         />
       ));
     } else {
-      return searchResults.map((media) => (
-        <MediaCard
-          id={media.id}
-          rating={media.rating}
-          image={
-            media.media_type == "person"
-              ? media.profile_path
-              : media.poster_path
-          }
-          type={media.media_type}
-          key={media.id}
-        />
-      ));
+      return searchResults.map((media) =>
+        media.media_type == "person" ? (
+          <PersonCard
+            id={media.id}
+            rating={media.rating}
+            image={media.profile_path}
+            type={media.media_type}
+            key={media.id}
+          />
+        ) : (
+          <MediaCard
+            id={media.id}
+            rating={media.rating}
+            image={media.poster_path}
+            type={media.media_type}
+            key={media.id}
+          />
+        )
+      );
     }
   };
 
