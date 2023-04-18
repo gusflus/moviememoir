@@ -19,6 +19,11 @@ const SearchNavigation = () => {
         component={Media}
         options={{ headerShown: false }}
       />
+      <Stack.Screen
+        name="Person"
+        component={Person}
+        options={{ headerShown: false }}
+      />
     </Stack.Navigator>
   );
 };

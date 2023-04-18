@@ -7,7 +7,7 @@ import { TMDB_API_KEY } from "@env";
 import Header from "../components/Header";
 import RatingBar from "../components/RatingBar";
 import TextBox from "../components/TextBox";
-import Person from "../components/Person";
+import PersonCard from "../components/PersonCard";
 
 import { colors } from "../components/Colors";
 
@@ -124,11 +124,12 @@ const Media = ({ route }) => {
             <View style={styles.horizontal}>
               {credits.cast.map((person) => {
                 return (
-                  <Person
-                    key={person.id}
+                  <PersonCard
+                    id={person.id}
                     image={person.profile_path}
                     name={person.name}
                     role={person.character}
+                    key={person.id}
                   />
                 );
               })}

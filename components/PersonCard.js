@@ -11,41 +11,44 @@ import React from "react";
 
 import { colors } from "./Colors";
 
-const MediaCard = ({ id, name, image, rating, type }) => {
+const PersonCard = ({ id, image, name, role }) => {
   const navigation = useNavigation();
   const width = Dimensions.get("window").width;
 
   return (
     <TouchableOpacity
       onPress={() => {
-        navigation.navigate("Media", { id: id, rating: rating, type: type });
+        navigation.navigate("Person", { id: id });
       }}
     >
-      <View style={[styles.container, { width: width * 0.4 }]}>
+      <View style={styles.container}>
         <Image
           source={{ uri: `https://image.tmdb.org/t/p/w500${image}` }}
           style={styles.image}
         />
         <View style={styles.overlay}>
-          <Text style={styles.text}>{id}</Text>
+          <Text style={styles.text}>{name}</Text>
+          <Text style={styles.role}>as: {role}</Text>
         </View>
       </View>
     </TouchableOpacity>
   );
 };
 
-export default MediaCard;
+export default PersonCard;
 
 const styles = StyleSheet.create({
   container: {
+    width: 150,
     height: 250,
     marginHorizontal: 15,
     marginTop: 20,
   },
   image: {
+    width: 150,
     height: 250,
     resizeMode: "cover",
-    borderRadius: 15,
+    borderRadius: 20,
   },
   overlay: {
     position: "absolute",
@@ -56,12 +59,17 @@ const styles = StyleSheet.create({
     bottom: 0,
     height: "25%",
     backgroundColor: colors.dark_transparent,
-    borderBottomLeftRadius: 15,
-    borderBottomRightRadius: 15,
+    borderBottomLeftRadius: 20,
+    borderBottomRightRadius: 20,
   },
   text: {
     color: colors.light,
-    fontSize: 16,
+    fontSize: 18,
+    textAlign: "center",
+  },
+  role: {
+    color: colors.light,
+    fontSize: 12,
     textAlign: "center",
   },
 });

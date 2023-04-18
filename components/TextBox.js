@@ -19,7 +19,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     backgroundColor: colors.light_transparent,
     padding: 20,
-    marginHorizontal: 10,
+    marginHorizontal: 20,
   },
   boxTitle: {
     fontSize: 27,
