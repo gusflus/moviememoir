@@ -1,4 +1,11 @@
-import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  TouchableOpacity,
+  Dimensions,
+} from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import React from "react";
 
@@ -6,8 +13,7 @@ import { colors } from "./Colors";
 
 const MovieCard = ({ id, image, rating }) => {
   const navigation = useNavigation();
-
-  console.log(`https://image.tmdb.org/t/p/w500${image}`);
+  const width = Dimensions.get("window").width;
 
   return (
     <TouchableOpacity
@@ -15,7 +21,7 @@ const MovieCard = ({ id, image, rating }) => {
         navigation.navigate("Movie", { id: id, rating: rating });
       }}
     >
-      <View style={styles.container}>
+      <View style={[styles.container, { width: width * 0.4 }]}>
         <Image
           source={{ uri: `https://image.tmdb.org/t/p/w500${image}` }}
           style={styles.image}
@@ -32,16 +38,14 @@ export default MovieCard;
 
 const styles = StyleSheet.create({
   container: {
-    width: 150,
     height: 250,
     marginHorizontal: 15,
     marginTop: 20,
   },
   image: {
-    width: 150,
     height: 250,
     resizeMode: "cover",
-    borderRadius: 20,
+    borderRadius: 15,
   },
   overlay: {
     position: "absolute",
@@ -52,8 +56,8 @@ const styles = StyleSheet.create({
     bottom: 0,
     height: "25%",
     backgroundColor: colors.dark_transparent,
-    borderBottomLeftRadius: 20,
-    borderBottomRightRadius: 20,
+    borderBottomLeftRadius: 15,
+    borderBottomRightRadius: 15,
   },
   text: {
     color: colors.light,

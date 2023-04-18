@@ -47,7 +47,7 @@ const Movie = ({ route }) => {
   };
 
   if (json == null || credits == null) {
-    return <></>;
+    return;
   }
 
   return (

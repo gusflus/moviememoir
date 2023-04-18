@@ -21,16 +21,15 @@ import { colors } from "../components/Colors";
 const MovieMemoir = () => {
   const [id, setId] = useState("");
   const [rating, setRating] = useState("");
-  const [watchedMovies, setWatchedMovies] = useState([]);
-  const [movieUrls, setMovieUrls] = useState([]);
   const [tempWatched, setTempWatched] = useState([]);
+  const [images, setImages] = useState({});
   const navigation = useNavigation();
 
   useEffect(() => {
     refresh();
   }, []);
 
-  refresh = () => {
+  const refresh = () => {
     setTempWatched([]);
     firestore
       .collection("users")
@@ -45,9 +44,6 @@ const MovieMemoir = () => {
           ]);
         });
       });
-
-    setMovieUrls([]);
-    getMovieImages();
   };
 
   const handleSignOut = () => {
@@ -55,7 +51,7 @@ const MovieMemoir = () => {
     navigation.replace("Login");
   };
 
-  handlePushToFirestore = () => {
+  const handlePushToFirestore = () => {
     firestore
       .collection("users")
       .doc(auth.currentUser.uid)
@@ -71,51 +67,76 @@ const MovieMemoir = () => {
     refresh();
   };
 
-  const getMovieImages = () => {};
+  const getImage = async (id) => {
+    const url = `https://api.themoviedb.org/3/movie/${id}?api_key=${TMDB_API_KEY}&language=en-US`;
+    const response = await fetch(url);
+    const data = await response.json();
+    setImages((prevImages) => {
+      return {
+        ...prevImages,
+        [id]: data.poster_path,
+      };
+    });
+  };
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <ScrollView contentContainerStyle={{ flex: 1 }}>
-        <View style={styles.container}>
-          <TextInput
-            placeholder="id"
-            value={id}
-            onChangeText={(text) => setId(text)}
-            style={styles.input}
-          />
-          <TextInput
-            placeholder="rating"
-            value={rating}
-            onChangeText={(text) => setRating(text)}
-            style={styles.input}
-            keyboardType="numeric"
-          />
+      <View style={styles.container}>
+        <ScrollView>
+          <View style={styles.wrapper}>
+            <TextInput
+              placeholder="id"
+              value={id}
+              onChangeText={(text) => setId(text)}
+              style={styles.input}
+            />
+            <TextInput
+              placeholder="rating"
+              value={rating}
+              onChangeText={(text) => setRating(text)}
+              style={styles.input}
+              keyboardType="numeric"
+            />
 
-          <TouchableOpacity
-            onPress={handlePushToFirestore}
-            style={styles.button}
+            <TouchableOpacity
+              onPress={handlePushToFirestore}
+              style={styles.button}
+            >
+              <Text>push to firestore</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={handleSignOut}
+              style={[styles.button, { marginBottom: 15 }]}
+            >
+              <Text>sign out</Text>
+            </TouchableOpacity>
+          </View>
+          <View
+            style={{
+              width: "100%",
+              alignContent: "center",
+              flexDirection: "row",
+              flexWrap: "wrap",
+              justifyContent: "space-evenly",
+            }}
           >
-            <Text>push to firestore</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={handleSignOut}
-            style={[styles.button, { marginBottom: 15 }]}
-          >
-            <Text>sign out</Text>
-          </TouchableOpacity>
-
-          {tempWatched.map((movie) => {
-            return (
-              <MovieCard
-                key={movie.fbid}
-                id={movie.id}
-                rating={movie.rating}
-                image={movieUrls[movie.id]}
-              />
-            );
-          })}
-        </View>
-      </ScrollView>
+            {tempWatched.map((movie) => {
+              const image = images[movie.id];
+              if (!image) {
+                getImage(movie.id);
+              }
+              return (
+                <MovieCard
+                  id={movie.id}
+                  rating={movie.rating}
+                  image={image}
+                  key={movie.id}
+                />
+              );
+            })}
+          </View>
+        </ScrollView>
+      </View>
     </TouchableWithoutFeedback>
   );
 };
@@ -128,6 +149,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: colors.dark,
+  },
+  wrapper: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    width: "100%",
+    marginTop: 150,
   },
   input: {
     width: "80%",
