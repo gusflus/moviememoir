@@ -6,7 +6,10 @@ import {
   TouchableOpacity,
   Dimensions,
 } from "react-native";
+import { useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { TMDB_API_KEY } from "@env";
 import React from "react";
 
 import { colors } from "./Colors";
@@ -14,6 +17,38 @@ import { colors } from "./Colors";
 const MediaCard = ({ id, image, rating, type }) => {
   const navigation = useNavigation();
   const width = Dimensions.get("window").width;
+  const [json, setJson] = useState(null);
+
+  useEffect(() => {
+    handleFetch();
+  }, []);
+
+  const handleFetch = () => {
+    let url;
+    switch (type) {
+      case "movie":
+        url = `https://api.themoviedb.org/3/movie/${id}?api_key=${TMDB_API_KEY}&language=en-US`;
+        break;
+      case "tv":
+        url = `https://api.themoviedb.org/3/tv/${id}?api_key=${TMDB_API_KEY}&language=en-US`;
+        break;
+      case "person":
+        url = `https://api.themoviedb.org/3/person/${id}?api_key=${TMDB_API_KEY}&language=en-US`;
+        break;
+      default:
+        console.log("(Media.js) Invalid category: " + type);
+        break;
+    }
+
+    fetch(url)
+      .then((response) => response.json())
+      .then((jsonData) => {
+        setJson(jsonData);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
 
   return (
     <TouchableOpacity
@@ -25,13 +60,28 @@ const MediaCard = ({ id, image, rating, type }) => {
         });
       }}
     >
-      <View style={[styles.container, { width: width * 0.4 }]}>
+      <View style={[styles.container, { width: width * 0.45 }]}>
         <Image
           source={{ uri: `https://image.tmdb.org/t/p/w500${image}` }}
           style={styles.image}
         />
         <View style={styles.overlay}>
-          <Text style={styles.text}>{id}</Text>
+          <Text style={styles.text}>{json != null ? json.title : ""}</Text>
+          <View style={styles.horizontal}>
+            <Text style={styles.text}>
+              {json != null
+                ? Math.floor(json.runtime / 60) +
+                  ":" +
+                  (json.runtime % 60 < 10 ? "0" : "") +
+                  (json.runtime % 60)
+                : ""}{" "}
+            </Text>
+            <MaterialCommunityIcons
+              name="clock-outline"
+              size={15}
+              color={colors.light}
+            />
+          </View>
         </View>
       </View>
     </TouchableOpacity>
@@ -42,30 +92,31 @@ export default MediaCard;
 
 const styles = StyleSheet.create({
   container: {
-    height: 250,
-    marginHorizontal: 15,
+    height: 320,
+    marginHorizontal: 5,
     marginTop: 20,
   },
   image: {
     height: 250,
     resizeMode: "cover",
-    borderRadius: 15,
+    borderTopLeftRadius: 15,
+    borderTopRightRadius: 15,
   },
   overlay: {
-    position: "absolute",
     justifyContent: "center",
     alignItems: "center",
-    left: 0,
-    right: 0,
-    bottom: 0,
-    height: "25%",
-    backgroundColor: colors.dark_transparent,
+    height: 70,
+    backgroundColor: colors.very_dark,
     borderBottomLeftRadius: 15,
     borderBottomRightRadius: 15,
   },
+  horizontal: {
+    justifyContent: "center",
+    flexDirection: "row",
+  },
   text: {
     color: colors.light,
-    fontSize: 16,
+    fontSize: 14,
     textAlign: "center",
   },
 });

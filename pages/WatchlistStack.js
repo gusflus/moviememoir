@@ -1,7 +1,7 @@
 import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
-import Home from "./Home";
+import Watchlist from "./Watchlist";
 import Media from "./Media";
 import Person from "./Person";
 
@@ -11,8 +11,8 @@ const HomeStack = () => {
   return (
     <Stack.Navigator initialRouteName="TabNavigation">
       <Stack.Screen
-        name="Home"
-        component={Home}
+        name="Watchlist"
+        component={Watchlist}
         options={{ headerShown: false }}
       />
       <Stack.Screen

@@ -16,10 +16,10 @@ export default TextBox;
 
 const styles = StyleSheet.create({
   boxContainer: {
+    width: "90%",
     borderRadius: 20,
     backgroundColor: colors.light_transparent,
     padding: 20,
-    marginHorizontal: 20,
   },
   boxTitle: {
     fontSize: 27,

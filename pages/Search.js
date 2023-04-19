@@ -112,11 +112,12 @@ const Search = () => {
           <ScrollView
             contentContainerStyle={{
               paddingBottom: 90,
+              paddingTop: 10,
             }}
           >
             <Searchbar onChangeText={handleSearch} />
             <View style={styles.wrapper}>
-              <Text style={styles.subTitle}>Trending: </Text>
+              <Text style={styles.subtitle}>Trending: </Text>
               {getResults()}
             </View>
           </ScrollView>
@@ -150,7 +151,7 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
     justifyContent: "space-evenly",
   },
-  subTitle: {
+  subtitle: {
     width: "100%",
     fontSize: 35,
     fontWeight: "bold",

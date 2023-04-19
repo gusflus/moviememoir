@@ -16,7 +16,7 @@ export default function Header(props) {
         >
           <MaterialCommunityIcons
             name="chevron-left"
-            size={30}
+            size={33}
             color={colors.primary}
           />
         </TouchableOpacity>
@@ -28,7 +28,16 @@ export default function Header(props) {
   }
   return (
     <View style={styles.headerNoButton}>
-      <Text adjustsFontSizeToFit numberOfLines={1} style={styles.title}>
+      <Text
+        adjustsFontSizeToFit
+        numberOfLines={1}
+        style={[
+          styles.title,
+          {
+            marginLeft: 30,
+          },
+        ]}
+      >
         {props.title}
       </Text>
     </View>
@@ -37,35 +46,26 @@ export default function Header(props) {
 
 const styles = StyleSheet.create({
   backButton: {
-    position: "absolute",
-    left: 15,
-    top: 60,
-    margin: 10,
-    marginRight: 20,
-    flexDirection: "row",
+    marginLeft: 15,
+    marginTop: 73,
     width: 40,
     height: 40,
     borderRadius: 20,
   },
   title: {
-    position: "absolute",
-    left: 66,
-    top: 71,
+    marginTop: 73,
     fontSize: 27,
-    marginRight: 15,
     fontWeight: "bold",
     color: colors.primary,
     justifyContent: "center",
   },
   header: {
-    width: "100%",
     flexDirection: "row",
     width: "100%",
     height: 130,
     backgroundColor: colors.dark,
   },
   headerNoButton: {
-    width: "100%",
     width: "100%",
     height: 130,
     backgroundColor: colors.dark,

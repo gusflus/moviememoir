@@ -72,8 +72,12 @@ const Person = ({ route }) => {
             style={styles.image}
           />
           <View style={styles.castContainer}>
-            <Text style={styles.subTitle}>Movies and TV:</Text>
-            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+            <Text style={styles.subtitle}>Movies and TV:</Text>
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={{ paddingHorizontal: 15 }}
+            >
               <View style={styles.horizontal}>
                 {credits.cast.map((media) => {
                   return (
@@ -89,7 +93,9 @@ const Person = ({ route }) => {
               </View>
             </ScrollView>
           </View>
-          <TextBox title="Biography:" text={json.biography} />
+          <View style={{ paddingBottom: 20 }}>
+            <TextBox title="Biography:" text={json.biography} />
+          </View>
         </View>
       </ScrollView>
     </>
@@ -137,7 +143,7 @@ const styles = StyleSheet.create({
   castContainer: {
     width: "90%",
     paddingTop: 10,
-    paddingBottom: 15,
+    paddingBottom: 25,
     marginHorizontal: 20,
     marginBottom: 25,
     backgroundColor: colors.light_transparent,
@@ -151,7 +157,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  subTitle: {
+  subtitle: {
     fontSize: 27,
     fontWeight: "bold",
     color: colors.light,

@@ -21,7 +21,7 @@ const PersonCard = ({ id, image, name, role }) => {
         navigation.push("Person", { id: id });
       }}
     >
-      <View style={[styles.container, { width: width * 0.4 }]}>
+      <View style={[styles.container, { width: width * 0.45 }]}>
         <Image
           source={{ uri: `https://image.tmdb.org/t/p/w500${image}` }}
           style={styles.image}
@@ -41,24 +41,21 @@ export default PersonCard;
 
 const styles = StyleSheet.create({
   container: {
-    height: 250,
-    marginHorizontal: 15,
+    height: 320,
+    marginHorizontal: 5,
     marginTop: 20,
   },
   image: {
     height: 250,
     resizeMode: "cover",
-    borderRadius: 15,
+    borderTopLeftRadius: 15,
+    borderTopRightRadius: 15,
   },
   overlay: {
-    position: "absolute",
     justifyContent: "center",
     alignItems: "center",
-    left: 0,
-    right: 0,
-    bottom: 0,
-    height: "25%",
-    backgroundColor: colors.dark_transparent,
+    height: 70,
+    backgroundColor: colors.very_dark,
     borderBottomLeftRadius: 15,
     borderBottomRightRadius: 15,
   },

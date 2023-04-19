@@ -1,6 +1,8 @@
 import React, { useState } from "react";
-import { TextInput, View, StyleSheet } from "react-native";
+import { TextInput, TouchableOpacity, View, StyleSheet } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+
+import { colors } from "../components/Colors";
 
 const SearchBar = ({ placeholder, onChangeText }) => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -8,6 +10,11 @@ const SearchBar = ({ placeholder, onChangeText }) => {
   const handleSearch = (text) => {
     setSearchTerm(text);
     onChangeText(text);
+  };
+
+  const handleClear = () => {
+    setSearchTerm("");
+    handleSearch("");
   };
 
   return (
@@ -18,7 +25,15 @@ const SearchBar = ({ placeholder, onChangeText }) => {
         value={searchTerm}
         onChangeText={handleSearch}
       />
-      <MaterialCommunityIcons name="magnify" style={styles.iconStyle} />
+      <TouchableOpacity onPress={handleClear} style={styles.xStyle}>
+        <MaterialCommunityIcons
+          name="close-circle-outline"
+          style={styles.xStyle}
+        />
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.iconStyle}>
+        <MaterialCommunityIcons name="magnify" style={styles.iconStyle} />
+      </TouchableOpacity>
     </View>
   );
 };
@@ -30,17 +45,23 @@ const styles = StyleSheet.create({
     marginHorizontal: 15,
     marginVertical: 10,
     flexDirection: "row",
-    borderRadius: 25,
+    borderRadius: 20,
   },
   inputStyle: {
     flex: 1,
     fontSize: 16,
     marginHorizontal: 15,
   },
-  iconStyle: {
-    fontSize: 35,
+  xStyle: {
+    fontSize: 25,
     alignSelf: "center",
-    marginHorizontal: 15,
+    color: colors.dark_transparent,
+  },
+  iconStyle: {
+    fontSize: 25,
+    alignSelf: "center",
+    marginHorizontal: 8,
+    color: colors.dark_transparent,
   },
 });
 

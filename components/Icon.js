@@ -10,7 +10,7 @@ const Icon = ({ iconName, focused }) => {
   return (
     <View style={styles.container}>
       <View
-        style={[focused ? styles.front : styles.back, { width: width * 0.5 }]}
+        style={[focused ? styles.front : styles.back, { width: width * 0.333 }]}
       >
         <MaterialCommunityIcons
           name={iconName}
