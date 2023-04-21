@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Dimensions,
   FlatList,
+  RefreshControl,
 } from "react-native";
 import React from "react";
 import { useState, useEffect } from "react";
@@ -35,6 +36,7 @@ const Media = ({ route }) => {
   const [similar, setSimilar] = useState(null);
   const [isInWatched, setIsInWatched] = useState(false);
   const [rating, setRating] = useState(null);
+  const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
     handleFetch();
@@ -228,7 +230,7 @@ const Media = ({ route }) => {
       .collection("watched")
       .doc(String(json.id))
       .set({
-        rating: 5,
+        rating: 0,
         type: route.params.type,
         id: String(json.id),
       })
@@ -284,6 +286,17 @@ const Media = ({ route }) => {
     } else {
       handleRemoveFromFirestore();
     }
+  };
+
+  const handleRefresh = () => {
+    setRefreshing(true);
+    handleFetch();
+    handleFetchCredits();
+    handleFetchSimilar();
+    handleFetchUserRating();
+    handleService();
+    handleIsInWatched();
+    setRefreshing(false);
   };
 
   const showStreaming = () => {
@@ -365,6 +378,9 @@ const Media = ({ route }) => {
         contentContainerStyle={{
           paddingBottom: 60,
         }}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
+        }
       >
         <View style={styles.container}>
           <FlatList

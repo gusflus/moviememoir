@@ -8,6 +8,7 @@ import {
   TouchableWithoutFeedback,
   ScrollView,
   Dimensions,
+  RefreshControl,
 } from "react-native";
 import React from "react";
 import { useState, useEffect } from "react";
@@ -24,33 +25,17 @@ import { colors } from "../components/Colors";
 
 const Home = () => {
   const isFocused = useIsFocused();
-  const [tempWatched, setTempWatched] = useState([]);
+  const [watched, setWatched] = useState([]);
   const [images, setImages] = useState({});
+  const [refreshing, setRefreshing] = useState(false);
+  const [json, setJson] = useState([]);
+  const [filteredJson, setFilteredJson] = useState([]);
 
   useEffect(() => {
-    refresh();
+    handleRefresh();
   }, [isFocused]);
 
-  const refresh = () => {
-    setTempWatched([]);
-    firestore
-      .collection("users")
-      .doc(auth.currentUser.uid)
-      .collection("watched")
-      .get()
-      .then((querySnapshot) => {
-        querySnapshot.forEach((watchedMedia) => {
-          setTempWatched((tempWatched) => [
-            ...tempWatched,
-            { ...watchedMedia.data(), fbid: watchedMedia.id },
-          ]);
-        });
-      });
-  };
-
-  const handleSearch = (text) => {};
-
-  const getImage = async (type, id) => {
+  const handleFetch = (id, type) => {
     let url;
     switch (type) {
       case "movie":
@@ -59,23 +44,64 @@ const Home = () => {
       case "tv":
         url = `https://api.themoviedb.org/3/tv/${id}?api_key=${TMDB_API_KEY}&language=en-US`;
         break;
-      case "person":
-        url = `https://api.themoviedb.org/3/person/${id}?api_key=${TMDB_API_KEY}&language=en-US`;
+      default:
+        console.log("(Watchlist.js - details) Invalid category: " + type);
         break;
     }
 
     fetch(url)
       .then((response) => response.json())
       .then((jsonData) => {
-        const data = jsonData;
-        setImages((prevImages) => {
-          return {
-            ...prevImages,
-            [id]: data.poster_path,
-          };
-        });
+        setJson((json) => [...json, { jsonData, media_type: type }]);
+      })
+      .catch((error) => {
+        console.error(error);
       });
   };
+
+  const handleRefresh = () => {
+    setWatched([]);
+    setJson([]);
+    firestore
+      .collection("users")
+      .doc(auth.currentUser.uid)
+      .collection("watched")
+      .get()
+      .then((querySnapshot) => {
+        querySnapshot.forEach((watchedMedia) => {
+          setWatched((watched) => [
+            ...watched,
+            { ...watchedMedia.data(), fbid: watchedMedia.id },
+          ]);
+          handleFetch(watchedMedia.data().id, watchedMedia.data().type);
+        });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+
+    setFilteredJson(json);
+  };
+
+  const handleSearch = (text) => {
+    const filtered = json.filter((media) => {
+      if (text.length === 0) {
+        return true;
+      } else {
+        return media.jsonData.title.toLowerCase().includes(text.toLowerCase());
+      }
+    });
+
+    setFilteredJson(filtered);
+  };
+
+  if (json == null) {
+    return (
+      <View style={styles.container}>
+        <Text style={{ color: colors.dark }}>Loading...</Text>
+      </View>
+    );
+  }
 
   return (
     <>
@@ -93,22 +119,23 @@ const Home = () => {
               paddingBottom: 90,
               paddingTop: 10,
             }}
+            refreshControl={
+              <RefreshControl
+                refreshing={refreshing}
+                onRefresh={handleRefresh}
+              />
+            }
           >
             <Searchbar onChangeText={handleSearch} />
             <View style={styles.wrapper}>
               <Text style={styles.subtitle}>What to Watch:</Text>
-              {tempWatched.map((media) => {
-                const image = images[media.id];
-                if (!image) {
-                  getImage(media.type, media.id);
-                }
+              {filteredJson.map((json) => {
                 return (
                   <MediaCard
-                    id={media.id}
-                    rating={media.rating}
-                    image={image}
-                    type={media.type}
-                    key={media.id}
+                    id={json.jsonData.id}
+                    image={json.jsonData.poster_path}
+                    type={json.media_type}
+                    key={json.jsonData.id}
                   />
                 );
               })}
