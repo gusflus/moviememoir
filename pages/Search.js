@@ -10,6 +10,7 @@ import {
 import React from "react";
 import { useState, useEffect } from "react";
 import { LinearGradient } from "expo-linear-gradient";
+import { useIsFocused } from "@react-navigation/native";
 
 import { colors } from "../components/Colors";
 import { TMDB_API_KEY } from "@env";
@@ -18,14 +19,19 @@ import Header from "../components/Header";
 import Searchbar from "../components/Searchbar";
 import MediaCard from "../components/MediaCard";
 import PersonCard from "../components/PersonCard";
+import BottomSheet from "../components/BottomSheet";
 
 const Search = () => {
+  const isFocused = useIsFocused();
   const [trending, setTrending] = useState([]);
   const [searchResults, setSearchResults] = useState([]);
+  const [sheet, setSheet] = useState(false);
+  const [filter, setFilter] = useState("popularity");
 
   useEffect(() => {
+    setSheet(false);
     getTrending();
-  }, []);
+  }, [isFocused]);
 
   const getTrending = () => {
     fetch(
@@ -76,25 +82,27 @@ const Search = () => {
         />
       ));
     } else {
-      return searchResults.map((media) =>
-        media.media_type == "person" ? (
-          <PersonCard
-            id={media.id}
-            rating={media.rating}
-            image={media.profile_path}
-            type={media.media_type}
-            key={media.id}
-          />
-        ) : (
-          <MediaCard
-            id={media.id}
-            rating={media.rating}
-            image={media.poster_path}
-            type={media.media_type}
-            key={media.id}
-          />
-        )
-      );
+      return searchResults
+        .sort((a, b) => b[filter] - a[filter])
+        .map((media) =>
+          media.media_type == "person" ? (
+            <PersonCard
+              id={media.id}
+              rating={media.rating}
+              image={media.profile_path}
+              type={media.media_type}
+              key={media.id}
+            />
+          ) : (
+            <MediaCard
+              id={media.id}
+              rating={media.rating}
+              image={media.poster_path}
+              type={media.media_type}
+              key={media.id}
+            />
+          )
+        );
     }
   };
 
@@ -106,7 +114,7 @@ const Search = () => {
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 1 }}
       />
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <TouchableWithoutFeedback onPress={() => setSheet(false)}>
         <>
           <Header title="Explore" />
           <ScrollView
@@ -115,14 +123,52 @@ const Search = () => {
               paddingTop: 10,
             }}
           >
-            <Searchbar onChangeText={handleSearch} />
+            <Searchbar
+              onChangeText={handleSearch}
+              filterFunc={() => setSheet(true)}
+            />
             <View style={styles.wrapper}>
-              <Text style={styles.subtitle}>Trending: </Text>
+              <Text style={styles.subtitle}>
+                {searchResults.length == 0 ? "Trending:" : "Search Results:"}
+              </Text>
               {getResults()}
             </View>
           </ScrollView>
         </>
       </TouchableWithoutFeedback>
+      <BottomSheet
+        isOpen={sheet}
+        style={styles.sheet}
+        children={
+          <>
+            <Text>Sort:</Text>
+            <TouchableOpacity
+              onPress={() => {
+                setFilter("popularity");
+                setSheet(false);
+              }}
+            >
+              <Text>Popularity</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                setFilter("rating");
+                setSheet(false);
+              }}
+            >
+              <Text>Rating</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                setFilter("release_date");
+                setSheet(false);
+              }}
+            >
+              <Text>Release Date</Text>
+            </TouchableOpacity>
+          </>
+        }
+      />
     </>
   );
 };

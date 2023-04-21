@@ -4,12 +4,13 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 import { colors } from "../components/Colors";
 
-const SearchBar = ({ placeholder, onChangeText }) => {
+const SearchBar = ({ onChangeText, filterFunc }) => {
+  const [filter, setFilter] = useState("popularity");
   const [searchTerm, setSearchTerm] = useState("");
 
   const handleSearch = (text) => {
     setSearchTerm(text);
-    onChangeText(text);
+    onChangeText(text, filter);
   };
 
   const handleClear = () => {
@@ -31,8 +32,11 @@ const SearchBar = ({ placeholder, onChangeText }) => {
           style={styles.xStyle}
         />
       </TouchableOpacity>
-      <TouchableOpacity style={styles.iconStyle}>
-        <MaterialCommunityIcons name="magnify" style={styles.iconStyle} />
+      <TouchableOpacity onPress={filterFunc} style={styles.iconStyle}>
+        <MaterialCommunityIcons
+          name="filter-variant"
+          style={styles.iconStyle}
+        />
       </TouchableOpacity>
     </View>
   );

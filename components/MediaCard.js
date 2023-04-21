@@ -36,7 +36,7 @@ const MediaCard = ({ id, image, rating, type }) => {
         url = `https://api.themoviedb.org/3/person/${id}?api_key=${TMDB_API_KEY}&language=en-US`;
         break;
       default:
-        console.log("(Media.js) Invalid category: " + type);
+        console.log("(MediaCard.js) Invalid category: " + type);
         break;
     }
 
@@ -49,6 +49,38 @@ const MediaCard = ({ id, image, rating, type }) => {
         console.error(error);
       });
   };
+
+  const getRuntime = () => {
+    if (type == "movie") {
+      return (
+        <View style={styles.horizontal}>
+          <Text style={styles.text}>
+            {Math.floor(json.runtime / 60) +
+              ":" +
+              (json.runtime % 60 < 10 ? "0" : "") +
+              (json.runtime % 60)}
+            {"  "}
+          </Text>
+          <MaterialCommunityIcons
+            name="clock-outline"
+            size={14}
+            color={colors.light}
+            style={{ marginTop: 5 }}
+          />
+        </View>
+      );
+    } else {
+      return (
+        <Text style={styles.text}>
+          {`${json.number_of_seasons} S ${json.number_of_episodes} E`}
+        </Text>
+      );
+    }
+  };
+
+  if (json == null) {
+    return;
+  }
 
   return (
     <TouchableOpacity
@@ -67,21 +99,7 @@ const MediaCard = ({ id, image, rating, type }) => {
         />
         <View style={styles.overlay}>
           <Text style={styles.text}>{json != null ? json.title : ""}</Text>
-          <View style={styles.horizontal}>
-            <Text style={styles.text}>
-              {json != null
-                ? Math.floor(json.runtime / 60) +
-                  ":" +
-                  (json.runtime % 60 < 10 ? "0" : "") +
-                  (json.runtime % 60)
-                : ""}{" "}
-            </Text>
-            <MaterialCommunityIcons
-              name="clock-outline"
-              size={15}
-              color={colors.light}
-            />
-          </View>
+          {getRuntime()}
         </View>
       </View>
     </TouchableOpacity>
@@ -118,5 +136,6 @@ const styles = StyleSheet.create({
     color: colors.light,
     fontSize: 14,
     textAlign: "center",
+    marginTop: 4,
   },
 });

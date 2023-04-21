@@ -13,6 +13,7 @@ import React from "react";
 import { useState, useEffect } from "react";
 import { auth, firestore } from "../Firebase";
 import { LinearGradient } from "expo-linear-gradient";
+import { useIsFocused } from "@react-navigation/native";
 
 import MediaCard from "../components/MediaCard";
 import Header from "../components/Header";
@@ -22,15 +23,13 @@ import { TMDB_API_KEY } from "@env";
 import { colors } from "../components/Colors";
 
 const Home = () => {
-  const { width } = Dimensions.get("window");
-  const [id, setId] = useState("");
-  const [rating, setRating] = useState("");
+  const isFocused = useIsFocused();
   const [tempWatched, setTempWatched] = useState([]);
   const [images, setImages] = useState({});
 
   useEffect(() => {
     refresh();
-  }, []);
+  }, [isFocused]);
 
   const refresh = () => {
     setTempWatched([]);
@@ -49,27 +48,7 @@ const Home = () => {
       });
   };
 
-  const handlePushToFirestore = () => {
-    firestore
-      .collection("users")
-      .doc(auth.currentUser.uid)
-      .collection("watched")
-      .doc(id)
-      .set({
-        rating: rating,
-        type: "movie",
-        id: id,
-      })
-      .then(() => {
-        console.log("added to firestore");
-      });
-
-    refresh();
-  };
-
   const handleSearch = (text) => {};
-
-  const getResults = () => {};
 
   const getImage = async (type, id) => {
     let url;

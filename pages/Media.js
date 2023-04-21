@@ -6,6 +6,7 @@ import {
   Text,
   TouchableOpacity,
   Dimensions,
+  FlatList,
 } from "react-native";
 import React from "react";
 import { useState, useEffect } from "react";
@@ -18,20 +19,37 @@ import Header from "../components/Header";
 import RatingBar from "../components/RatingBar";
 import TextBox from "../components/TextBox";
 import PersonCard from "../components/PersonCard";
+import MediaCard from "../components/MediaCard";
+import BottomSheet from "../components/BottomSheet";
+import Rater from "../components/Rater";
 
 import { colors } from "../components/Colors";
 
 const Media = ({ route }) => {
   const { width } = Dimensions.get("window");
+  const [sheet, setSheet] = useState(false);
   const [json, setJson] = useState(null);
+  const [images, setImages] = useState(null);
   const [service, setService] = useState(null);
   const [credits, setCredits] = useState(null);
+  const [similar, setSimilar] = useState(null);
+  const [isInWatched, setIsInWatched] = useState(false);
+  const [rating, setRating] = useState(null);
 
   useEffect(() => {
     handleFetch();
+    handleFetchImages();
     handleFetchCredits();
     handleService();
+    handleFetchSimilar();
   }, []);
+
+  useEffect(() => {
+    if (json) {
+      handleIsInWatched();
+      handleFetchUserRating();
+    }
+  }, [json, isInWatched]);
 
   const handleFetch = () => {
     let url;
@@ -42,11 +60,10 @@ const Media = ({ route }) => {
       case "tv":
         url = `https://api.themoviedb.org/3/tv/${route.params.id}?api_key=${TMDB_API_KEY}&language=en-US`;
         break;
-      case "person":
-        url = `https://api.themoviedb.org/3/person/${route.params.id}?api_key=${TMDB_API_KEY}&language=en-US`;
-        break;
       default:
-        console.log("(Media.js) Invalid category: " + route.params.type);
+        console.log(
+          "(Media.js - details) Invalid category: " + route.params.type
+        );
         break;
     }
 
@@ -60,23 +77,26 @@ const Media = ({ route }) => {
       });
   };
 
-  const handleService = () => {
+  const handleFetchImages = () => {
+    let url;
     switch (route.params.type) {
       case "movie":
-        url = `https://api.themoviedb.org/3/movie/${route.params.id}/watch/providers?api_key=${TMDB_API_KEY}`;
+        url = `https://api.themoviedb.org/3/movie/${route.params.id}/images?api_key=${TMDB_API_KEY}`;
         break;
       case "tv":
-        url = `https://api.themoviedb.org/3/tv/${route.params.id}/watch/providers?api_key=${TMDB_API_KEY}`;
+        url = `https://api.themoviedb.org/3/tv/${route.params.id}/images?api_key=${TMDB_API_KEY}`;
         break;
       default:
-        console.log("(Media.js) Invalid category: " + route.params.type);
+        console.log(
+          "(Media.js - images) Invalid category: " + route.params.type
+        );
         break;
     }
 
     fetch(url)
       .then((response) => response.json())
       .then((jsonData) => {
-        setService(jsonData);
+        setImages(jsonData);
       })
       .catch((error) => {
         console.error(error);
@@ -111,6 +131,95 @@ const Media = ({ route }) => {
       });
   };
 
+  const handleFetchSimilar = () => {
+    let url;
+    switch (route.params.type) {
+      case "movie":
+        url = `https://api.themoviedb.org/3/movie/${route.params.id}/recommendations?api_key=${TMDB_API_KEY}&language=en-US&page=1`;
+        break;
+      case "tv":
+        url = `https://api.themoviedb.org/3/tv/${route.params.id}/recommendations?api_key=${TMDB_API_KEY}&language=en-US&page=1`;
+        break;
+      default:
+        console.log(
+          "(Media.js - similar) Invalid category: " + route.params.type
+        );
+        break;
+    }
+
+    fetch(url)
+      .then((response) => response.json())
+      .then((jsonData) => {
+        setSimilar(jsonData);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+
+  const handleFetchUserRating = () => {
+    firestore
+      .collection("users")
+      .doc(auth.currentUser.uid)
+      .collection("watched")
+      .doc(String(json.id))
+      .get()
+      .then((doc) => {
+        if (doc.exists) {
+          setRating(doc.data().rating);
+        } else {
+          setRating(null);
+        }
+      })
+      .catch((error) => {
+        console.log("Error getting document:", error);
+      });
+  };
+
+  const handleService = () => {
+    switch (route.params.type) {
+      case "movie":
+        url = `https://api.themoviedb.org/3/movie/${route.params.id}/watch/providers?api_key=${TMDB_API_KEY}`;
+        break;
+      case "tv":
+        url = `https://api.themoviedb.org/3/tv/${route.params.id}/watch/providers?api_key=${TMDB_API_KEY}`;
+        break;
+      default:
+        console.log(
+          "(Media.js - service) Invalid category: " + route.params.type
+        );
+        break;
+    }
+
+    fetch(url)
+      .then((response) => response.json())
+      .then((jsonData) => {
+        setService(jsonData);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+
+  const handleIsInWatched = () => {
+    firestore
+      .collection("users")
+      .doc(auth.currentUser.uid)
+      .collection("watched")
+      .doc(String(json.id))
+      .get()
+      .then((doc) => {
+        if (doc.exists) {
+          setIsInWatched(true);
+        } else {
+          setIsInWatched(false);
+        }
+      })
+      .catch((error) => {
+        console.log("Error getting document:", error);
+      });
+  };
+
   const handlePushToFirestore = () => {
     console.log("pushing to firestore " + json.id);
     firestore
@@ -125,35 +234,118 @@ const Media = ({ route }) => {
       })
       .then(() => {
         console.log("added to firestore");
+        setIsInWatched(true);
       })
       .catch((error) => {
         console.log("fbtest" + error);
       });
   };
 
+  const handleRemoveFromFirestore = () => {
+    firestore
+      .collection("users")
+      .doc(auth.currentUser.uid)
+      .collection("watched")
+      .doc(String(json.id))
+      .delete()
+      .then(() => {
+        console.log("removed from firestore");
+        setIsInWatched(false);
+      })
+      .catch((error) => {
+        console.log("error removing from Firestore" + error);
+      });
+  };
+
+  const handleRating = (rating) => {
+    console.log("rating: " + rating);
+    setSheet(false);
+    setRating(rating);
+
+    if (rating != null) {
+      setIsInWatched(true);
+      firestore
+        .collection("users")
+        .doc(auth.currentUser.uid)
+        .collection("watched")
+        .doc(String(json.id))
+        .set({
+          rating: rating,
+          type: route.params.type,
+          id: String(json.id),
+        })
+        .then(() => {
+          console.log("added to firestore");
+          setIsInWatched(true);
+        })
+        .catch((error) => {
+          console.log("fbtest" + error);
+        });
+    } else {
+      handleRemoveFromFirestore();
+    }
+  };
+
   const showStreaming = () => {
     let platform;
     try {
-      platform = service.results.US.flatrate[0];
+      platform = service.results.US.flatrate;
+      platform.provider_name;
     } catch (error) {
-      console.log(error);
-      return;
+      return <Text style={styles.info}>{"\n"}Not avaliable for streaming</Text>;
     }
 
     return (
-      <View style={styles.horizontal}>
-        <Text style={styles.info}>Avaliable on: {platform.provider_name}</Text>
-        <Image
-          source={{
-            uri: `https://image.tmdb.org/t/p/w200${platform.logo_path}`,
-          }}
-          style={styles.logo}
-        />
-      </View>
+      <>
+        <Text style={styles.info}>
+          {"\n"}Stream on: {platform.provider_name}
+        </Text>
+        <ScrollView
+          horizontal={true}
+          style={{ paddingHorizontal: 20, marginTop: 5 }}
+          showsHorizontalScrollIndicator={false}
+        >
+          {platform.map((item) => {
+            return (
+              <Image
+                source={{
+                  uri: `https://image.tmdb.org/t/p/w200${item.logo_path}`,
+                }}
+                style={styles.logo}
+                key={item.provider_id}
+              />
+            );
+          })}
+        </ScrollView>
+      </>
     );
   };
 
-  if (json == null || credits == null || service == null) {
+  const getRuntime = () => {
+    if (route.params.type == "movie") {
+      return (
+        <Text style={styles.info}>
+          {`Duration: ${Math.floor(json.runtime / 60)} hr ${
+            json.runtime % 60
+          } min`}
+        </Text>
+      );
+    } else {
+      return (
+        <Text
+          style={styles.info}
+        >{`${json.number_of_seasons} Seasons and ${json.number_of_episodes} Episodes\n${json.episode_run_time} minutes per episode`}</Text>
+      );
+    }
+  };
+
+  if (
+    json == null ||
+    images == null ||
+    credits == null ||
+    service == null ||
+    similar == null
+  ) {
     return;
   }
 
@@ -175,36 +367,42 @@ const Media = ({ route }) => {
         }}
       >
         <View style={styles.container}>
-          <Image
-            source={{
-              uri: `https://image.tmdb.org/t/p/w500${json.backdrop_path}`,
-            }}
-            style={styles.image}
+          <FlatList
+            data={images.backdrops}
+            horizontal
+            keyExtractor={(item) => item.file_path}
+            showsHorizontalScrollIndicator={false}
+            renderItem={({ item }) => (
+              <Image
+                source={{
+                  uri: `https://image.tmdb.org/t/p/original${item.file_path}`,
+                }}
+                style={[
+                  styles.image,
+                  {
+                    marginHorizontal: 20,
+                    height: 200,
+                    width: width * 0.9,
+                    resizeMode: "cover",
+                  },
+                ]}
+              />
+            )}
           />
           <View style={styles.infoWrapper}>
-            <View style={styles.horizontal}>
-              <Text style={styles.info}>
-                {Math.floor(json.runtime / 60) +
-                  ":" +
-                  (json.runtime % 60 < 10 ? "0" : "") +
-                  (json.runtime % 60)}
-              </Text>
-              <MaterialCommunityIcons
-                name="clock-outline"
-                size={22}
-                color={colors.light}
-              />
-            </View>
+            <Text style={styles.subtitle}>Info:</Text>
+            <View style={styles.horizontal}>{getRuntime()}</View>
             {showStreaming()}
           </View>
           <View style={styles.ratingContainer}>
-            <Text style={styles.subtitle}>Your Rating:</Text>
-            <View style={styles.center}>
-              <RatingBar
-                styles={styles.userRating}
-                progress={route.params.rating}
-              />
-            </View>
+            {rating != null ? (
+              <>
+                <Text style={styles.subtitle}>Your Rating:</Text>
+                <View style={styles.center}>
+                  <RatingBar styles={styles.userRating} progress={rating} />
+                </View>
+              </>
+            ) : null}
             <Text style={styles.subtitle}>Average Rating:</Text>
             <View style={styles.center}>
               <RatingBar
@@ -213,9 +411,36 @@ const Media = ({ route }) => {
               />
             </View>
           </View>
+          <View style={styles.buttonContainer}>
+            <View
+              style={[
+                styles.horizontal,
+                { justifyContent: "space-between", alignItems: "center" },
+              ]}
+            >
+              <TouchableOpacity
+                onPress={
+                  isInWatched
+                    ? handleRemoveFromFirestore
+                    : handlePushToFirestore
+                }
+                style={styles.button}
+              >
+                <Text>
+                  {isInWatched ? "Remove from Watchlist" : "Add to Watchlist"}
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => setSheet(true)}
+                style={styles.button}
+              >
+                <Text>{isInWatched ? "Rate again" : "Rate"}</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
           <TextBox title="Overview:" text={json.overview} />
         </View>
-        <View style={styles.castContainer}>
+        <View style={[styles.cardContainer, { marginBottom: 0 }]}>
           <Text style={styles.subtitle}>Cast:</Text>
           <ScrollView
             horizontal
@@ -230,20 +455,41 @@ const Media = ({ route }) => {
                     image={person.profile_path}
                     name={person.name}
                     role={person.character}
-                    key={person.id}
+                    key={json.id + person.id}
                   />
                 );
               })}
             </View>
           </ScrollView>
         </View>
-        <TouchableOpacity
-          onPress={handlePushToFirestore}
-          style={[styles.button, { marginLeft: width * 0.1 }]}
-        >
-          <Text>Add to Watchlist</Text>
-        </TouchableOpacity>
+        <View style={styles.cardContainer}>
+          <Text style={styles.subtitle}>More like this:</Text>
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={{ paddingHorizontal: 15 }}
+          >
+            <View style={styles.horizontal}>
+              {similar.results.map((media) => {
+                return (
+                  <MediaCard
+                    id={media.id}
+                    image={media.poster_path}
+                    type={route.params.type}
+                    key={json.id + media.id}
+                  />
+                );
+              })}
+            </View>
+          </ScrollView>
+        </View>
       </ScrollView>
+      <BottomSheet
+        isOpen={sheet}
+        close={() => setSheet(false)}
+        height={250}
+        children={<Rater onRate={handleRating} />}
+      />
     </>
   );
 };
@@ -273,28 +519,29 @@ const styles = StyleSheet.create({
   },
   infoWrapper: {
     width: "90%",
-    paddingHorizontal: 5,
-    paddingVertical: 10,
+    paddingTop: 5,
     marginHorizontal: 10,
     marginBottom: 20,
     backgroundColor: colors.light_transparent,
     justifyContent: "center",
     borderRadius: 20,
+    paddingBottom: 20,
   },
   info: {
     fontSize: 20,
     fontWeight: "bold",
     color: colors.light,
-    marginHorizontal: 10,
+    marginHorizontal: 20,
   },
   logo: {
-    height: 45,
-    width: 45,
+    height: 65,
+    width: 65,
     resizeMode: "cover",
     borderRadius: 0,
     overflow: "hidden",
-    marginVertical: 20,
-    borderRadius: 10,
+    borderRadius: 12,
+    margin: 5,
+    marginBottom: 0,
   },
   horizontal: {
     justifyContent: "center",
@@ -302,7 +549,8 @@ const styles = StyleSheet.create({
   },
   ratingContainer: {
     width: "90%",
-    paddingVertical: 10,
+    paddingTop: 5,
+    paddingBottom: 10,
     marginHorizontal: 10,
     marginBottom: 20,
     backgroundColor: colors.light_transparent,
@@ -315,12 +563,30 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  castContainer: {
+  buttonContainer: {
+    width: "90%",
+    padding: 10,
+    marginHorizontal: 10,
+    marginBottom: 20,
+    borderRadius: 20,
+    backgroundColor: colors.light_transparent,
+  },
+  button: {
+    width: "52%",
+    backgroundColor: colors.secondary,
+    alignItems: "center",
+    justifyContent: "center",
+    padding: 20,
+    margin: 5,
+    borderRadius: 25,
+  },
+  cardContainer: {
     width: "90%",
     paddingTop: 10,
     paddingBottom: 25,
     marginHorizontal: 20,
-    marginVertical: 25,
+    marginTop: 25,
+    marginBottom: 25,
     backgroundColor: colors.light_transparent,
     borderRadius: 20,
   },
@@ -338,14 +604,5 @@ const styles = StyleSheet.create({
     color: colors.light,
     marginTop: 10,
     marginLeft: 20,
-  },
-  button: {
-    width: "80%",
-    marginBottom: 35,
-    backgroundColor: colors.secondary,
-    alignItems: "center",
-    padding: 20,
-    margin: 5,
-    borderRadius: 25,
   },
 });

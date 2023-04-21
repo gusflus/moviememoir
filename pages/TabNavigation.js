@@ -12,6 +12,7 @@ const TabNavigation = () => {
 
   return (
     <Tab.Navigator
+      initialRouteName="SearchStack"
       screenOptions={({ route }) => ({
         tabBarIcon: ({ focused }) => {
           let iconName;

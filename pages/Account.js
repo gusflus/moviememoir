@@ -50,7 +50,6 @@ const styles = StyleSheet.create({
   container: {
     width: "100%",
     alignItems: "center",
-    justifyContent: "center",
   },
   background: {
     position: "absolute",
@@ -63,7 +62,8 @@ const styles = StyleSheet.create({
     fontSize: 27,
     fontWeight: "bold",
     color: colors.dark,
-    marginTop: 10,
+    marginTop: 100,
+    marginBottom: 20,
     marginLeft: 20,
   },
   button: {

@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "mediamemoir",
-    "slug": "mediamemoir",
+    "name": "moviememoir",
+    "slug": "moviememoir",
     "version": "1.0.0",
     "orientation": "portrait",
     "userInterfaceStyle": "light",
@@ -13,7 +13,7 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": false
     },
     "android": {
       "adaptiveIcon": {

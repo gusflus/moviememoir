@@ -79,17 +79,19 @@ const Person = ({ route }) => {
               contentContainerStyle={{ paddingHorizontal: 15 }}
             >
               <View style={styles.horizontal}>
-                {credits.cast.map((media) => {
-                  return (
-                    <MediaCard
-                      id={media.id}
-                      image={media.poster_path}
-                      name={media.title}
-                      type={media.media_type}
-                      key={media.id}
-                    />
-                  );
-                })}
+                {credits.cast
+                  .sort((a, b) => b.popularity - a.popularity)
+                  .map((media) => {
+                    return (
+                      <MediaCard
+                        id={media.id}
+                        image={media.poster_path}
+                        name={media.title}
+                        type={media.media_type}
+                        key={media.id}
+                      />
+                    );
+                  })}
               </View>
             </ScrollView>
           </View>
