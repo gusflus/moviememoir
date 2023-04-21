@@ -6,6 +6,7 @@ import Icon from "../components/Icon";
 import WatchlistStack from "./WatchlistStack";
 import SearchStack from "./SearchStack";
 import Account from "./Account";
+import WatchHistoryStack from "./WatchHistoryStack";
 
 const TabNavigation = () => {
   const Tab = createBottomTabNavigator();
@@ -20,6 +21,9 @@ const TabNavigation = () => {
           switch (route.name) {
             case "WatchlistStack":
               iconName = focused ? "film" : "film";
+              break;
+            case "WatchHistoryStack":
+              iconName = focused ? "history" : "history";
               break;
             case "SearchStack":
               iconName = focused ? "magnify" : "magnify";
@@ -37,6 +41,11 @@ const TabNavigation = () => {
         name="WatchlistStack"
         options={styles.tab}
         component={WatchlistStack}
+      />
+      <Tab.Screen
+        name="WatchHistoryStack"
+        options={styles.tab}
+        component={WatchHistoryStack}
       />
       <Tab.Screen
         name="SearchStack"

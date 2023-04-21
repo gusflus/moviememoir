@@ -20,7 +20,7 @@ import Searchbar from "../components/Searchbar";
 import { TMDB_API_KEY } from "@env";
 import { colors } from "../components/Colors";
 
-const Watchlist = () => {
+const WatchHistory = () => {
   const isFocused = useIsFocused();
   const [watched, setWatched] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
@@ -61,7 +61,7 @@ const Watchlist = () => {
     firestore
       .collection("users")
       .doc(auth.currentUser.uid)
-      .collection("watchlist")
+      .collection("watched")
       .get()
       .then((querySnapshot) => {
         querySnapshot.forEach((watchedMedia) => {
@@ -109,7 +109,7 @@ const Watchlist = () => {
       />
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <>
-          <Header title="Your Watchlist" />
+          <Header title="Your Watch History" />
           <ScrollView
             contentContainerStyle={{
               paddingBottom: 90,
@@ -143,7 +143,7 @@ const Watchlist = () => {
   );
 };
 
-export default Watchlist;
+export default WatchHistory;
 
 const styles = StyleSheet.create({
   container: {

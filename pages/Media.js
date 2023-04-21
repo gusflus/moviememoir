@@ -222,12 +222,12 @@ const Media = ({ route }) => {
       });
   };
 
-  const handlePushToFirestore = () => {
-    console.log("pushing to firestore " + json.id);
+  const handlePushToWatchlist = () => {
+    console.log("pushing to watchlist " + json.id);
     firestore
       .collection("users")
       .doc(auth.currentUser.uid)
-      .collection("watched")
+      .collection("watchlist")
       .doc(String(json.id))
       .set({
         rating: 0,
@@ -235,15 +235,31 @@ const Media = ({ route }) => {
         id: String(json.id),
       })
       .then(() => {
-        console.log("added to firestore");
+        console.log("added to watchlist");
         setIsInWatched(true);
       })
       .catch((error) => {
-        console.log("fbtest" + error);
+        console.log("pushToWatchlist" + error);
       });
   };
 
-  const handleRemoveFromFirestore = () => {
+  const handleRemoveFromWatchlist = () => {
+    firestore
+      .collection("users")
+      .doc(auth.currentUser.uid)
+      .collection("watchlist")
+      .doc(String(json.id))
+      .delete()
+      .then(() => {
+        console.log("removed from watchlist");
+        setIsInWatched(false);
+      })
+      .catch((error) => {
+        console.log("error removing from Watchlist" + error);
+      });
+  };
+
+  const handleRemoveFromWatched = () => {
     firestore
       .collection("users")
       .doc(auth.currentUser.uid)
@@ -251,16 +267,17 @@ const Media = ({ route }) => {
       .doc(String(json.id))
       .delete()
       .then(() => {
-        console.log("removed from firestore");
+        console.log("removed from watched");
         setIsInWatched(false);
       })
       .catch((error) => {
-        console.log("error removing from Firestore" + error);
+        console.log("error removing from Watched" + error);
       });
   };
 
   const handleRating = (rating) => {
     console.log("rating: " + rating);
+    handleRemoveFromWatchlist();
     setSheet(false);
     setRating(rating);
 
@@ -277,14 +294,14 @@ const Media = ({ route }) => {
           id: String(json.id),
         })
         .then(() => {
-          console.log("added to firestore");
+          console.log("added to watched");
           setIsInWatched(true);
         })
         .catch((error) => {
-          console.log("fbtest" + error);
+          console.log("handleRating" + error);
         });
     } else {
-      handleRemoveFromFirestore();
+      handleRemoveFromWatched();
     }
   };
 
@@ -437,8 +454,8 @@ const Media = ({ route }) => {
               <TouchableOpacity
                 onPress={
                   isInWatched
-                    ? handleRemoveFromFirestore
-                    : handlePushToFirestore
+                    ? handleRemoveFromWatchlist
+                    : handlePushToWatchlist
                 }
                 style={styles.button}
               >

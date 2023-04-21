@@ -1,18 +1,18 @@
 import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
-import Watchlist from "./Watchlist";
+import WatchHistory from "./WatchHistory";
 import Media from "./Media";
 import Person from "./Person";
 
-const WatchlistStack = () => {
+const WatchHistoryStack = () => {
   const Stack = createNativeStackNavigator();
 
   return (
     <Stack.Navigator initialRouteName="TabNavigation">
       <Stack.Screen
-        name="Watchlist"
-        component={Watchlist}
+        name="WatchHistory"
+        component={WatchHistory}
         options={{ headerShown: false }}
       />
       <Stack.Screen
@@ -29,4 +29,4 @@ const WatchlistStack = () => {
   );
 };
 
-export default WatchlistStack;
+export default WatchHistoryStack;
