@@ -11,6 +11,8 @@ import React from "react";
 
 import { colors } from "./Colors";
 
+import ImageUnavailable from "./ImageUnavailable";
+
 const PersonCard = ({ id, image, name, role }) => {
   const navigation = useNavigation();
   const width = Dimensions.get("window").width;
@@ -22,10 +24,14 @@ const PersonCard = ({ id, image, name, role }) => {
       }}
     >
       <View style={[styles.container, { width: width * 0.45 }]}>
-        <Image
-          source={{ uri: `https://image.tmdb.org/t/p/w500${image}` }}
-          style={styles.image}
-        />
+        {image ? (
+          <Image
+            source={{ uri: `https://image.tmdb.org/t/p/w500${image}` }}
+            style={styles.image}
+          />
+        ) : (
+          <ImageUnavailable />
+        )}
         <View style={styles.overlay}>
           <Text style={styles.text}>{name}</Text>
           <Text style={styles.role}>
@@ -44,6 +50,13 @@ const styles = StyleSheet.create({
     height: 320,
     marginHorizontal: 5,
     marginTop: 20,
+    borderRadius: 15,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.3,
   },
   image: {
     height: 250,

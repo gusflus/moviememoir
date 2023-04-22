@@ -64,10 +64,22 @@ const styles = StyleSheet.create({
     width: "100%",
     height: 130,
     backgroundColor: colors.dark,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.33,
   },
   headerNoButton: {
     width: "100%",
     height: 130,
     backgroundColor: colors.dark,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.33,
   },
 });

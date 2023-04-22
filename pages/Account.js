@@ -41,7 +41,7 @@ const Account = () => {
           <Text>sign out</Text>
         </TouchableOpacity>
 
-        <Text style={[styles.subtitle, { marginTop: 125, marginBottom: 0 }]}>
+        <Text style={[styles.subtitle, { marginTop: 100, marginBottom: 10 }]}>
           Data Credits:
         </Text>
         <Image

@@ -13,6 +13,7 @@ import { TMDB_API_KEY } from "@env";
 import React from "react";
 
 import { colors } from "./Colors";
+import ImageUnavailable from "./ImageUnavailable";
 
 const MediaCard = ({ id, image, rating, type }) => {
   const navigation = useNavigation();
@@ -93,10 +94,14 @@ const MediaCard = ({ id, image, rating, type }) => {
       }}
     >
       <View style={[styles.container, { width: width * 0.45 }]}>
-        <Image
-          source={{ uri: `https://image.tmdb.org/t/p/w500${image}` }}
-          style={styles.image}
-        />
+        {image ? (
+          <Image
+            source={{ uri: `https://image.tmdb.org/t/p/w500${image}` }}
+            style={styles.image}
+          />
+        ) : (
+          <ImageUnavailable />
+        )}
         <View style={styles.overlay}>
           <Text style={styles.text}>{json != null ? json.title : ""}</Text>
           {getRuntime()}
@@ -113,6 +118,13 @@ const styles = StyleSheet.create({
     height: 320,
     marginHorizontal: 5,
     marginTop: 20,
+    borderRadius: 15,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.4,
   },
   image: {
     height: 250,

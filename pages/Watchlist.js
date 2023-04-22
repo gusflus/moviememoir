@@ -27,9 +27,12 @@ const Watchlist = () => {
   const [filteredJson, setFilteredJson] = useState([]);
 
   useEffect(() => {
-    setJson([]);
     handleRefresh();
   }, [isFocused]);
+
+  useEffect(() => {
+    setFilteredJson(json);
+  }, [json]);
 
   const handleFetch = (id, type) => {
     let url;
@@ -48,7 +51,10 @@ const Watchlist = () => {
     fetch(url)
       .then((response) => response.json())
       .then((jsonData) => {
-        setJson((json) => [...json, { jsonData, media_type: type }]);
+        const media = { jsonData, media_type: type };
+        if (!json.some((item) => item.jsonData.id === media.jsonData.id)) {
+          setJson((json) => [...json, media]);
+        }
       })
       .catch((error) => {
         console.error(error);
@@ -56,6 +62,7 @@ const Watchlist = () => {
   };
 
   const handleRefresh = () => {
+    setRefreshing(true);
     firestore
       .collection("users")
       .doc(auth.currentUser.uid)
@@ -71,6 +78,7 @@ const Watchlist = () => {
       });
 
     setFilteredJson(json);
+    setRefreshing(false);
   };
 
   const handleSearch = (text) => {

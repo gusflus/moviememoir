@@ -4,7 +4,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 import { colors } from "../components/Colors";
 
-const SearchBar = ({ onChangeText, filterFunc }) => {
+const SearchBar = ({ onChangeText, filterButton, filterFunc }) => {
   const [filter, setFilter] = useState("popularity");
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -32,12 +32,16 @@ const SearchBar = ({ onChangeText, filterFunc }) => {
           style={styles.xStyle}
         />
       </TouchableOpacity>
-      <TouchableOpacity onPress={filterFunc} style={styles.iconStyle}>
-        <MaterialCommunityIcons
-          name="filter-variant"
-          style={styles.iconStyle}
-        />
-      </TouchableOpacity>
+      {filterButton ? (
+        <TouchableOpacity onPress={filterFunc} style={styles.iconStyle}>
+          <MaterialCommunityIcons
+            name="filter-variant"
+            style={styles.iconStyle}
+          />
+        </TouchableOpacity>
+      ) : (
+        <View style={{ marginRight: 10 }} />
+      )}
     </View>
   );
 };

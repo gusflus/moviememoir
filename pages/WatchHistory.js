@@ -27,11 +27,14 @@ const WatchHistory = () => {
   const [filteredJson, setFilteredJson] = useState([]);
 
   useEffect(() => {
-    setJson([]);
     handleRefresh();
   }, [isFocused]);
 
-  const handleFetch = (id, type) => {
+  useEffect(() => {
+    setFilteredJson(json);
+  }, [json]);
+
+  const handleFetch = (id, type, rating) => {
     let url;
     switch (type) {
       case "movie":
@@ -48,7 +51,7 @@ const WatchHistory = () => {
     fetch(url)
       .then((response) => response.json())
       .then((jsonData) => {
-        const media = { jsonData, media_type: type };
+        const media = { jsonData, media_type: type, rating: rating };
         if (!json.some((item) => item.jsonData.id === media.jsonData.id)) {
           setJson((json) => [...json, media]);
         }
@@ -66,14 +69,18 @@ const WatchHistory = () => {
       .get()
       .then((querySnapshot) => {
         querySnapshot.forEach((watchedMedia) => {
-          handleFetch(watchedMedia.data().id, watchedMedia.data().type);
+          handleFetch(
+            watchedMedia.data().id,
+            watchedMedia.data().type,
+            watchedMedia.data().rating
+          );
         });
       })
       .catch((error) => {
         console.log(error);
       });
 
-    setFilteredJson(json);
+    setRefreshing(false);
   };
 
   const handleSearch = (text) => {
@@ -86,6 +93,52 @@ const WatchHistory = () => {
     });
 
     setFilteredJson(filtered);
+  };
+
+  const mediaCardsByRating = filteredJson.reduce((acc, curr) => {
+    const rating = curr.rating;
+    if (!acc[rating]) {
+      acc[rating] = [curr];
+    } else {
+      acc[rating].push(curr);
+    }
+    return acc;
+  }, {});
+
+  const getColorFromRating = (rating) => {
+    const value = rating / 10;
+
+    const stops = [
+      { stop: 0, color: [207, 32, 39] },
+      { stop: 0.5, color: [255, 217, 0] },
+      { stop: 1, color: [69, 173, 70] },
+    ];
+
+    let lowerStop, upperStop;
+    for (let i = 0; i < stops.length - 1; i++) {
+      if (value >= stops[i].stop && value <= stops[i + 1].stop) {
+        lowerStop = stops[i];
+        upperStop = stops[i + 1];
+        break;
+      }
+    }
+
+    const lowerWeight =
+      (upperStop.stop - value) / (upperStop.stop - lowerStop.stop);
+    const upperWeight = 1 - lowerWeight;
+    const color = [
+      Math.round(
+        lowerWeight * lowerStop.color[0] + upperWeight * upperStop.color[0]
+      ),
+      Math.round(
+        lowerWeight * lowerStop.color[1] + upperWeight * upperStop.color[1]
+      ),
+      Math.round(
+        lowerWeight * lowerStop.color[2] + upperWeight * upperStop.color[2]
+      ),
+    ];
+
+    return `rgba(${color[0]}, ${color[1]}, ${color[2]}, 0.33)`;
   };
 
   if (json == null) {
@@ -117,17 +170,30 @@ const WatchHistory = () => {
           >
             <Searchbar onChangeText={handleSearch} />
             <View style={styles.wrapper}>
-              <Text style={styles.subtitle}>What to Watch:</Text>
-              {filteredJson.map((json) => {
-                return (
-                  <MediaCard
-                    id={json.jsonData.id}
-                    image={json.jsonData.poster_path}
-                    type={json.media_type}
-                    key={json.jsonData.id}
-                  />
-                );
-              })}
+              <Text style={styles.subtitle}>Your Ratings:</Text>
+              {Object.keys(mediaCardsByRating)
+                .sort((a, b) => b - a)
+                .map((rating) => (
+                  <View
+                    style={[
+                      styles.ratingContainer,
+                      { backgroundColor: getColorFromRating(rating) },
+                    ]}
+                    key={rating}
+                  >
+                    <Text style={styles.ratingTitle}>Rated {rating}:</Text>
+                    <View style={styles.horizontal}>
+                      {mediaCardsByRating[rating].map((json) => (
+                        <MediaCard
+                          id={json.jsonData.id}
+                          image={json.jsonData.poster_path}
+                          type={json.media_type}
+                          key={json.jsonData.id}
+                        />
+                      ))}
+                    </View>
+                  </View>
+                ))}
             </View>
           </ScrollView>
         </>
@@ -166,5 +232,27 @@ const styles = StyleSheet.create({
     color: colors.dark,
     marginLeft: 40,
     marginTop: 10,
+  },
+  ratingContainer: {
+    width: "96%",
+    alignItems: "flex-start",
+    justifyContent: "center",
+    marginTop: 25,
+    paddingBottom: 5,
+    borderRadius: 20,
+  },
+  ratingTitle: {
+    alignSelf: "flex-start",
+    marginLeft: 10,
+    marginTop: 10,
+    fontSize: 25,
+    fontWeight: "bold",
+    color: colors.light,
+  },
+  horizontal: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "space-between",
+    margin: 1.79,
   },
 });

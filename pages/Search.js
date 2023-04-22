@@ -33,6 +33,10 @@ const Search = () => {
     getTrending();
   }, [isFocused]);
 
+  useEffect(() => {
+    handleFilter();
+  }, [filter]);
+
   const getTrending = () => {
     fetch(
       `https://api.themoviedb.org/3/trending/movie/week?api_key=${TMDB_API_KEY}`
@@ -60,6 +64,10 @@ const Search = () => {
       });
   };
 
+  const handleFilter = () => {
+    getResults();
+  };
+
   const getResults = () => {
     if (searchResults[0] == -1) {
       return (
@@ -82,27 +90,26 @@ const Search = () => {
         />
       ));
     } else {
-      return searchResults
-        .sort((a, b) => b[filter] - a[filter])
-        .map((media) =>
-          media.media_type == "person" ? (
-            <PersonCard
-              id={media.id}
-              rating={media.rating}
-              image={media.profile_path}
-              type={media.media_type}
-              key={media.id}
-            />
-          ) : (
-            <MediaCard
-              id={media.id}
-              rating={media.rating}
-              image={media.poster_path}
-              type={media.media_type}
-              key={media.id}
-            />
-          )
-        );
+      const sortedResults = searchResults.sort((a, b) => b[filter] - a[filter]);
+      return sortedResults.map((media) =>
+        media.media_type == "person" ? (
+          <PersonCard
+            id={media.id}
+            rating={media.rating}
+            image={media.profile_path}
+            type={media.media_type}
+            key={media.id}
+          />
+        ) : (
+          <MediaCard
+            id={media.id}
+            rating={media.rating}
+            image={media.poster_path}
+            type={media.media_type}
+            key={media.id}
+          />
+        )
+      );
     }
   };
 
@@ -125,6 +132,7 @@ const Search = () => {
           >
             <Searchbar
               onChangeText={handleSearch}
+              filterButton
               filterFunc={() => setSheet(true)}
             />
             <View style={styles.wrapper}>
@@ -139,33 +147,30 @@ const Search = () => {
       <BottomSheet
         isOpen={sheet}
         style={styles.sheet}
+        close={() => setSheet(false)}
         children={
           <>
-            <Text>Sort:</Text>
-            <TouchableOpacity
-              onPress={() => {
-                setFilter("popularity");
-                setSheet(false);
-              }}
-            >
-              <Text>Popularity</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => {
-                setFilter("rating");
-                setSheet(false);
-              }}
-            >
-              <Text>Rating</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => {
-                setFilter("release_date");
-                setSheet(false);
-              }}
-            >
-              <Text>Release Date</Text>
-            </TouchableOpacity>
+            <Text style={styles.filterTitle}>Sort:</Text>
+            <View style={styles.horizontal}>
+              <TouchableOpacity
+                onPress={() => {
+                  setFilter("popularity");
+                  setSheet(false);
+                }}
+                style={styles.filterButtonContainer}
+              >
+                <Text>Popularity</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => {
+                  setFilter("vote_average");
+                  setSheet(false);
+                }}
+                style={styles.filterButtonContainer}
+              >
+                <Text>Rating</Text>
+              </TouchableOpacity>
+            </View>
           </>
         }
       />
@@ -204,5 +209,25 @@ const styles = StyleSheet.create({
     color: colors.dark,
     marginLeft: 45,
     marginTop: 10,
+  },
+  horizontal: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "space-evenly",
+  },
+  filterTitle: {
+    fontSize: 25,
+    fontWeight: "bold",
+    color: colors.dark,
+    marginBottom: 20,
+  },
+  filterButtonContainer: {
+    width: 100,
+    padding: 10,
+    backgroundColor: colors.secondary,
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 25,
+    marginVertical: 5,
   },
 });

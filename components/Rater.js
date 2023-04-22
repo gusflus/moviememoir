@@ -10,6 +10,42 @@ const CONTENT_SIZE = 30;
 const Rater = ({ onRate }) => {
   const [rating, setRating] = React.useState(0);
 
+  const getColorFromRating = (rating) => {
+    const value = rating / 10;
+
+    const stops = [
+      { stop: 0, color: [207, 32, 39] },
+      { stop: 0.5, color: [255, 217, 0] },
+      { stop: 1, color: [69, 173, 70] },
+    ];
+
+    let lowerStop, upperStop;
+    for (let i = 0; i < stops.length - 1; i++) {
+      if (value >= stops[i].stop && value <= stops[i + 1].stop) {
+        lowerStop = stops[i];
+        upperStop = stops[i + 1];
+        break;
+      }
+    }
+
+    const lowerWeight =
+      (upperStop.stop - value) / (upperStop.stop - lowerStop.stop);
+    const upperWeight = 1 - lowerWeight;
+    const color = [
+      Math.round(
+        lowerWeight * lowerStop.color[0] + upperWeight * upperStop.color[0]
+      ),
+      Math.round(
+        lowerWeight * lowerStop.color[1] + upperWeight * upperStop.color[1]
+      ),
+      Math.round(
+        lowerWeight * lowerStop.color[2] + upperWeight * upperStop.color[2]
+      ),
+    ];
+
+    return `rgba(${color[0]}, ${color[1]}, ${color[2]}, 1)`;
+  };
+
   const renderContent = (index) => {
     const section = 100;
     const angle = (section / 10) * index - 90 - section / 2;
@@ -59,9 +95,7 @@ const Rater = ({ onRate }) => {
         style={[
           styles.button,
           {
-            backgroundColor: `rgb(${Math.round(
-              ((10 - rating) * 255) / 10
-            )}, ${Math.round((rating * 255) / 10)}, 0)`,
+            backgroundColor: getColorFromRating(rating),
           },
         ]}
       >
@@ -75,7 +109,7 @@ const Rater = ({ onRate }) => {
             width: 60,
             height: 40,
             marginTop: 5,
-            backgroundColor: "#FF0000",
+            backgroundColor: colors.secondary,
           },
         ]}
       >

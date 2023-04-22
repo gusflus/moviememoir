@@ -25,6 +25,7 @@ import BottomSheet from "../components/BottomSheet";
 import Rater from "../components/Rater";
 
 import { colors } from "../components/Colors";
+import { setStatusBarBackgroundColor } from "expo-status-bar";
 
 const Media = ({ route }) => {
   const { width } = Dimensions.get("window");
@@ -35,6 +36,7 @@ const Media = ({ route }) => {
   const [credits, setCredits] = useState(null);
   const [similar, setSimilar] = useState(null);
   const [isInWatched, setIsInWatched] = useState(false);
+  const [hasBeenRated, setHasBeenRated] = useState(false);
   const [rating, setRating] = useState(null);
   const [refreshing, setRefreshing] = useState(false);
 
@@ -49,9 +51,10 @@ const Media = ({ route }) => {
   useEffect(() => {
     if (json) {
       handleIsInWatched();
+      handleHasBeenRated();
       handleFetchUserRating();
     }
-  }, [json, isInWatched]);
+  }, [json, isInWatched, hasBeenRated]);
 
   const handleFetch = () => {
     let url;
@@ -207,7 +210,7 @@ const Media = ({ route }) => {
     firestore
       .collection("users")
       .doc(auth.currentUser.uid)
-      .collection("watched")
+      .collection("watchlisted")
       .doc(String(json.id))
       .get()
       .then((doc) => {
@@ -215,6 +218,25 @@ const Media = ({ route }) => {
           setIsInWatched(true);
         } else {
           setIsInWatched(false);
+        }
+      })
+      .catch((error) => {
+        console.log("Error getting document:", error);
+      });
+  };
+
+  const handleHasBeenRated = () => {
+    firestore
+      .collection("users")
+      .doc(auth.currentUser.uid)
+      .collection("watched")
+      .doc(String(json.id))
+      .get()
+      .then((doc) => {
+        if (doc.exists) {
+          setHasBeenRated(true);
+        } else {
+          setHasBeenRated(false);
         }
       })
       .catch((error) => {
@@ -467,7 +489,7 @@ const Media = ({ route }) => {
                 onPress={() => setSheet(true)}
                 style={styles.button}
               >
-                <Text>{isInWatched ? "Rate again" : "Rate"}</Text>
+                <Text>{hasBeenRated ? "Rate again" : "Rate"}</Text>
               </TouchableOpacity>
             </View>
           </View>
