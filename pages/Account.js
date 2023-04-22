@@ -4,6 +4,7 @@ import {
   View,
   TouchableOpacity,
   Dimensions,
+  Image,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { auth } from "../Firebase";
@@ -39,6 +40,27 @@ const Account = () => {
         >
           <Text>sign out</Text>
         </TouchableOpacity>
+
+        <Text style={[styles.subtitle, { marginTop: 125, marginBottom: 0 }]}>
+          Data Credits:
+        </Text>
+        <Image
+          source={require("../assets/TMDB_att.png")}
+          style={styles.image}
+        />
+        <Text
+          style={{
+            textAlign: "center",
+            marginTop: 25,
+            color: "#90cea1",
+          }}
+        >
+          {"Movie, TV, and people data courtesy of\nThe Movie Database"}
+        </Text>
+        <Image source={require("../assets/JW_att.png")} style={styles.image} />
+        <Text style={{ color: "#FFCE2E" }}>
+          {"Streaming data courtesy of JustWatch"}
+        </Text>
       </View>
     </>
   );
@@ -72,5 +94,11 @@ const styles = StyleSheet.create({
     padding: 20,
     marginTop: 25,
     borderRadius: 25,
+  },
+  image: {
+    alignItems: "center",
+    width: "75%",
+    resizeMode: "contain",
+    marginTop: 25,
   },
 });

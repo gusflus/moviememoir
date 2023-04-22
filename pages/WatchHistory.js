@@ -22,12 +22,12 @@ import { colors } from "../components/Colors";
 
 const WatchHistory = () => {
   const isFocused = useIsFocused();
-  const [watched, setWatched] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
   const [json, setJson] = useState([]);
   const [filteredJson, setFilteredJson] = useState([]);
 
   useEffect(() => {
+    setJson([]);
     handleRefresh();
   }, [isFocused]);
 
@@ -48,7 +48,10 @@ const WatchHistory = () => {
     fetch(url)
       .then((response) => response.json())
       .then((jsonData) => {
-        setJson((json) => [...json, { jsonData, media_type: type }]);
+        const media = { jsonData, media_type: type };
+        if (!json.some((item) => item.jsonData.id === media.jsonData.id)) {
+          setJson((json) => [...json, media]);
+        }
       })
       .catch((error) => {
         console.error(error);
@@ -56,8 +59,6 @@ const WatchHistory = () => {
   };
 
   const handleRefresh = () => {
-    setWatched([]);
-    setJson([]);
     firestore
       .collection("users")
       .doc(auth.currentUser.uid)
@@ -65,10 +66,6 @@ const WatchHistory = () => {
       .get()
       .then((querySnapshot) => {
         querySnapshot.forEach((watchedMedia) => {
-          setWatched((watched) => [
-            ...watched,
-            { ...watchedMedia.data(), fbid: watchedMedia.id },
-          ]);
           handleFetch(watchedMedia.data().id, watchedMedia.data().type);
         });
       })
@@ -92,11 +89,7 @@ const WatchHistory = () => {
   };
 
   if (json == null) {
-    return (
-      <View style={styles.container}>
-        <Text style={{ color: colors.dark }}>Loading...</Text>
-      </View>
-    );
+    return;
   }
 
   return (

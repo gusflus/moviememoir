@@ -22,12 +22,12 @@ import { colors } from "../components/Colors";
 
 const Watchlist = () => {
   const isFocused = useIsFocused();
-  const [watched, setWatched] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
   const [json, setJson] = useState([]);
   const [filteredJson, setFilteredJson] = useState([]);
 
   useEffect(() => {
+    setJson([]);
     handleRefresh();
   }, [isFocused]);
 
@@ -56,8 +56,6 @@ const Watchlist = () => {
   };
 
   const handleRefresh = () => {
-    setWatched([]);
-    setJson([]);
     firestore
       .collection("users")
       .doc(auth.currentUser.uid)
@@ -65,10 +63,6 @@ const Watchlist = () => {
       .get()
       .then((querySnapshot) => {
         querySnapshot.forEach((watchedMedia) => {
-          setWatched((watched) => [
-            ...watched,
-            { ...watchedMedia.data(), fbid: watchedMedia.id },
-          ]);
           handleFetch(watchedMedia.data().id, watchedMedia.data().type);
         });
       })
