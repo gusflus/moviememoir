@@ -12,15 +12,8 @@ import {
 import React from "react";
 import { useState, useEffect } from "react";
 import { LinearGradient } from "expo-linear-gradient";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { auth, firestore } from "../Firebase";
 import { TMDB_API_KEY } from "@env";
-
-import {
-  TestIds,
-  BannerAd,
-  BannerAdSize,
-} from "react-native-google-mobile-ads";
 
 import Header from "../components/Header";
 import RatingBar from "../components/RatingBar";
@@ -44,10 +37,6 @@ const Media = ({ route }) => {
   const [hasBeenRated, setHasBeenRated] = useState(false);
   const [rating, setRating] = useState(null);
   const [refreshing, setRefreshing] = useState(false);
-
-  const adUnitId = __DEV__
-    ? TestIds.APP_OPEN
-    : "ca-app-pub-5570163992222450~5142722214";
 
   useEffect(() => {
     handleFetch();
@@ -517,13 +506,6 @@ const Media = ({ route }) => {
                 ]}
               />
             )}
-          />
-          <BannerAd
-            unitId={adUnitId}
-            size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
-            requestOptions={{
-              requestNonPersonalizedAdsOnly: true,
-            }}
           />
           <View style={styles.infoWrapper}>
             <Text style={styles.subtitle}>Info:</Text>

@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "moviememoir",
-    "slug": "moviememoir",
+    "name": "Movie Memoir",
+    "slug": "MovieMemoir",
     "version": "1.0.0",
     "orientation": "portrait",
     "userInterfaceStyle": "light",
@@ -13,29 +13,17 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": false
+      "supportsTablet": false,
+      "bundleIdentifier": "com.gusflus.moviememoir"
     },
     "android": {
       "adaptiveIcon": {
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.gusflus.moviememoir"
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    },
-    "plugins": [
-      [
-        "expo-build-properties",
-        {
-          "ios": {
-            "useFrameworks": "static"
-          }
-        }
-      ]
-    ]
-  },
-  "react-native-google-mobile-ads": {
-    "ios_app_id": "ca-app-pub-5570163992222450~5142722214",
-    "user_tracking_usage_description": "This identifier will be used to deliver personalized ads to you."
+    }
   }
 }
