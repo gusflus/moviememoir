@@ -1166,27 +1166,6 @@
     "node-forge" "^1.2.1"
     "nullthrows" "^1.1.1"
 
-"@expo/config-plugins@~5.0.0":
-  "integrity" "sha512-vzUcVpqOMs3h+hyRdhGwk+eGIOhXa5xYdd92yO17RMNHav3v/+ekMbs7XA2c3lepMO8Yd4/5hqmRw9ZTL6jGzg=="
-  "resolved" "https://registry.npmjs.org/@expo/config-plugins/-/config-plugins-5.0.4.tgz"
-  "version" "5.0.4"
-  dependencies:
-    "@expo/config-types" "^47.0.0"
-    "@expo/json-file" "8.2.36"
-    "@expo/plist" "0.0.18"
-    "@expo/sdk-runtime-versions" "^1.0.0"
-    "@react-native/normalize-color" "^2.0.0"
-    "chalk" "^4.1.2"
-    "debug" "^4.3.1"
-    "find-up" "~5.0.0"
-    "getenv" "^1.0.0"
-    "glob" "7.1.6"
-    "resolve-from" "^5.0.0"
-    "semver" "^7.3.5"
-    "slash" "^3.0.0"
-    "xcode" "^3.0.1"
-    "xml2js" "0.4.23"
-
 "@expo/config-plugins@~6.0.0", "@expo/config-plugins@6.0.1":
   "integrity" "sha512-6mqZutxeibXFeqFfoZApFUEH2n1RxGXYMHCdJrDj4eXDBBFZ3aJ0XBoroZcHHHvfRieEsf54vNyJoWp7JZGj8g=="
   "resolved" "https://registry.npmjs.org/@expo/config-plugins/-/config-plugins-6.0.1.tgz"
@@ -1207,11 +1186,6 @@
     "slash" "^3.0.0"
     "xcode" "^3.0.1"
     "xml2js" "0.4.23"
-
-"@expo/config-types@^47.0.0":
-  "integrity" "sha512-r0pWfuhkv7KIcXMUiNACJmJKKwlTBGMw9VZHNdppS8/0Nve8HZMTkNRFQzTHW1uH3pBj8jEXpyw/2vSWDHex9g=="
-  "resolved" "https://registry.npmjs.org/@expo/config-types/-/config-types-47.0.0.tgz"
-  "version" "47.0.0"
 
 "@expo/config-types@^48.0.0":
   "integrity" "sha512-DwyV4jTy/+cLzXGAo1xftS6mVlSiLIWZjl9DjTCLPFVgNYQxnh7htPilRv4rBhiNs7KaznWqKU70+4zQoKVT9A=="
@@ -1302,15 +1276,6 @@
     "json5" "^2.2.2"
     "write-file-atomic" "^2.3.0"
 
-"@expo/json-file@8.2.36":
-  "integrity" "sha512-tOZfTiIFA5KmMpdW9KF7bc6CFiGjb0xnbieJhTGlHrLL+ps2G0OkqmuZ3pFEXBOMnJYUVpnSy++52LFxvpa5ZQ=="
-  "resolved" "https://registry.npmjs.org/@expo/json-file/-/json-file-8.2.36.tgz"
-  "version" "8.2.36"
-  dependencies:
-    "@babel/code-frame" "~7.10.4"
-    "json5" "^1.0.1"
-    "write-file-atomic" "^2.3.0"
-
 "@expo/metro-config@~0.7.0":
   "integrity" "sha512-vGWU62Zp5pRGw5IEHDNdqvsy62/hu/Na7bswePYVjoaItOjJY7+qilFeF0AAK+3V8qAM8fpltH3ByylKfWaA7A=="
   "resolved" "https://registry.npmjs.org/@expo/metro-config/-/metro-config-0.7.1.tgz"
@@ -1355,15 +1320,6 @@
   "version" "0.0.20"
   dependencies:
     "@xmldom/xmldom" "~0.7.7"
-    "base64-js" "^1.2.3"
-    "xmlbuilder" "^14.0.0"
-
-"@expo/plist@0.0.18":
-  "integrity" "sha512-+48gRqUiz65R21CZ/IXa7RNBXgAI/uPSdvJqoN9x1hfL44DNbUoWHgHiEXTx7XelcATpDwNTz6sHLfy0iNqf+w=="
-  "resolved" "https://registry.npmjs.org/@expo/plist/-/plist-0.0.18.tgz"
-  "version" "0.0.18"
-  dependencies:
-    "@xmldom/xmldom" "~0.7.0"
     "base64-js" "^1.2.3"
     "xmlbuilder" "^14.0.0"
 
@@ -2648,7 +2604,7 @@
     "@urql/core" ">=2.3.1"
     "wonka" "^4.0.14"
 
-"@xmldom/xmldom@~0.7.0", "@xmldom/xmldom@~0.7.7":
+"@xmldom/xmldom@~0.7.7":
   "integrity" "sha512-hb9QhOg5MGmpVkFcoZ9XJMe1em5gd0e2eqqjK87O1dwULedXsnY/Zg/Ju6lcohA+t6jVkmKpe7I1etqhvdRdrQ=="
   "resolved" "https://registry.npmjs.org/@xmldom/xmldom/-/xmldom-0.7.10.tgz"
   "version" "0.7.10"
@@ -4145,13 +4101,6 @@
     "snapdragon" "^0.8.1"
     "to-regex" "^3.0.1"
 
-"expo-ads-admob@^13.0.0":
-  "integrity" "sha512-5ea9mG2o23c2DNS+RMVG5ddKEK3AJVvfmwPk8oNUHr3FfrJu98W9rh+cqXzFNRGO4XB0wYa2t8QN/77TivTJ0w=="
-  "resolved" "https://registry.npmjs.org/expo-ads-admob/-/expo-ads-admob-13.1.0.tgz"
-  "version" "13.1.0"
-  dependencies:
-    "@expo/config-plugins" "~5.0.0"
-
 "expo-application@~5.1.1":
   "integrity" "sha512-aDatTcTTCdTbHw8h4/Tq2ilc6InM5ntF9xWCJdOcnUEcglxxGphVI/lzJKBaBF6mJECA8mEOjpVg2EGxOctTwg=="
   "resolved" "https://registry.npmjs.org/expo-application/-/expo-application-5.1.1.tgz"
@@ -5611,13 +5560,6 @@
   "integrity" "sha512-4xrs1aW+6N5DalkqSVA8fxh458CXvR99WU8WLKmq4v8eWAL86Xo3BVqyd3SkA9wEVjCMqyvvRRkshAdOnBp5rw=="
   "resolved" "https://registry.npmjs.org/json5/-/json5-0.5.1.tgz"
   "version" "0.5.1"
-
-"json5@^1.0.1":
-  "integrity" "sha512-g1MWMLBiz8FKi1e4w0UyVL3w+iJceWAFBAaBnnGKOpNa5f8TLktkbre1+s6oICydWAm+HRUGTmI+//xv2hvXYA=="
-  "resolved" "https://registry.npmjs.org/json5/-/json5-1.0.2.tgz"
-  "version" "1.0.2"
-  dependencies:
-    "minimist" "^1.2.0"
 
 "json5@^2.2.2":
   "integrity" "sha512-XmOWe7eyHYH14cLdVPoyg+GOH3rYX++KpzrylJwSW98t3Nk+U8XOl8FWKOgwtzdb8lXGf6zYwDUzeHMWfxasyg=="
