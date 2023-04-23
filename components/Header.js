@@ -70,6 +70,7 @@ const styles = StyleSheet.create({
       height: 2,
     },
     shadowOpacity: 0.33,
+    elevation: 4,
   },
   headerNoButton: {
     width: "100%",
@@ -81,5 +82,6 @@ const styles = StyleSheet.create({
       height: 2,
     },
     shadowOpacity: 0.33,
+    elevation: 4,
   },
 });

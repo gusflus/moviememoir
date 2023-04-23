@@ -16,6 +16,12 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { auth, firestore } from "../Firebase";
 import { TMDB_API_KEY } from "@env";
 
+import {
+  TestIds,
+  BannerAd,
+  BannerAdSize,
+} from "react-native-google-mobile-ads";
+
 import Header from "../components/Header";
 import RatingBar from "../components/RatingBar";
 import TextBox from "../components/TextBox";
@@ -25,7 +31,6 @@ import BottomSheet from "../components/BottomSheet";
 import Rater from "../components/Rater";
 
 import { colors } from "../components/Colors";
-import { setStatusBarBackgroundColor } from "expo-status-bar";
 
 const Media = ({ route }) => {
   const { width } = Dimensions.get("window");
@@ -39,6 +44,10 @@ const Media = ({ route }) => {
   const [hasBeenRated, setHasBeenRated] = useState(false);
   const [rating, setRating] = useState(null);
   const [refreshing, setRefreshing] = useState(false);
+
+  const adUnitId = __DEV__
+    ? TestIds.APP_OPEN
+    : "ca-app-pub-5570163992222450~5142722214";
 
   useEffect(() => {
     handleFetch();
@@ -155,7 +164,9 @@ const Media = ({ route }) => {
     fetch(url)
       .then((response) => response.json())
       .then((jsonData) => {
-        setSimilar(jsonData);
+        setSimilar(
+          jsonData.results.sort((a, b) => b.popularity - a.popularity)
+        );
       })
       .catch((error) => {
         console.error(error);
@@ -384,11 +395,74 @@ const Media = ({ route }) => {
       );
     } else {
       return (
-        <Text
-          style={styles.info}
-        >{`${json.number_of_seasons} Seasons and ${json.number_of_episodes} Episodes\n${json.episode_run_time} minutes per episode`}</Text>
+        <Text style={styles.info}>{`${json.number_of_seasons} Seasons and ${
+          json.number_of_episodes
+        } Episodes${
+          json.episode_run_time.length > 0
+            ? `\n${json.episode_run_time[0]} minutes per episode`
+            : ""
+        }`}</Text>
       );
     }
+  };
+
+  const getReleaseDate = () => {
+    const intToMonth = (int) => {
+      const months = [
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December",
+      ];
+      return months[int - 1];
+    };
+
+    if (route.params.type == "movie") {
+      const date = json.release_date;
+      return (
+        <Text style={styles.info}>
+          {`Released: ${intToMonth(date.substring(5, 7))} ${date.substring(
+            8
+          )}, ${date.substring(0, 4)}`}
+        </Text>
+      );
+    } else {
+      const date = json.first_air_date;
+      return (
+        <Text style={styles.info}>
+          {`First Aired: ${intToMonth(date.substring(5, 7))} ${date.substring(
+            8
+          )}, ${date.substring(0, 4)}`}
+        </Text>
+      );
+    }
+  };
+
+  getDirector = () => {
+    if (route.params.type == "movie") {
+      const director = credits.crew.find((item) => item.job == "Director");
+      if (director == undefined) {
+        return;
+      }
+      return (
+        <PersonCard
+          id={director.id}
+          image={director.profile_path}
+          name={director.name}
+          role={"Director"}
+          key={json.id + director.id}
+        />
+      );
+    }
+    return;
   };
 
   if (
@@ -444,9 +518,19 @@ const Media = ({ route }) => {
               />
             )}
           />
+          <BannerAd
+            unitId={adUnitId}
+            size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
+            requestOptions={{
+              requestNonPersonalizedAdsOnly: true,
+            }}
+          />
           <View style={styles.infoWrapper}>
             <Text style={styles.subtitle}>Info:</Text>
-            <View style={styles.horizontal}>{getRuntime()}</View>
+            <View>
+              {getRuntime()}
+              {getReleaseDate()}
+            </View>
             {showStreaming()}
           </View>
           <View style={styles.ratingContainer}>
@@ -503,6 +587,7 @@ const Media = ({ route }) => {
             contentContainerStyle={{ paddingHorizontal: 15 }}
           >
             <View style={styles.horizontal}>
+              {getDirector()}
               {credits.cast.map((person) => {
                 return (
                   <PersonCard
@@ -525,7 +610,7 @@ const Media = ({ route }) => {
             contentContainerStyle={{ paddingHorizontal: 15 }}
           >
             <View style={styles.horizontal}>
-              {similar.results.map((media) => {
+              {similar.map((media) => {
                 return (
                   <MediaCard
                     id={media.id}

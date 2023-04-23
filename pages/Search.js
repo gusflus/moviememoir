@@ -80,11 +80,7 @@ const Search = () => {
         <MediaCard
           id={media.id}
           rating={media.rating}
-          image={
-            media.media_type == "person"
-              ? media.profile_path
-              : media.poster_path
-          }
+          image={media.poster_path}
           type={media.media_type}
           key={media.id}
         />
@@ -98,6 +94,7 @@ const Search = () => {
             rating={media.rating}
             image={media.profile_path}
             type={media.media_type}
+            name={media.name}
             key={media.id}
           />
         ) : (

@@ -103,7 +103,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     width: "75%",
     resizeMode: "contain",
-    marginTop: 50,
+    marginTop: 90,
+    marginBottom: 20,
   },
   inputContainer: {
     alignItems: "center",

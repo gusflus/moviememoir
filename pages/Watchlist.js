@@ -76,8 +76,6 @@ const Watchlist = () => {
       .catch((error) => {
         console.log(error);
       });
-
-    setFilteredJson(json);
     setRefreshing(false);
   };
 

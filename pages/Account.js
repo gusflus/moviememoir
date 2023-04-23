@@ -32,15 +32,17 @@ const Account = () => {
         end={{ x: 1, y: 1 }}
       />
       <Header title="Account" />
+      <Text style={styles.title}>Information:</Text>
       <View style={[styles.container, { height: height - 130 }]}>
-        <Text style={styles.subtitle}>User: {auth.currentUser.email}</Text>
-        <TouchableOpacity
-          onPress={handleSignOut}
-          style={[styles.button, { marginBottom: 15 }]}
-        >
-          <Text>sign out</Text>
-        </TouchableOpacity>
-
+        <View style={styles.wrapper}>
+          <Text style={styles.subtitle}>User: {auth.currentUser.email}</Text>
+          <TouchableOpacity
+            onPress={handleSignOut}
+            style={[styles.button, { marginBottom: 15 }]}
+          >
+            <Text>sign out</Text>
+          </TouchableOpacity>
+        </View>
         <Text style={[styles.subtitle, { marginTop: 100, marginBottom: 10 }]}>
           Data Credits:
         </Text>
@@ -80,20 +82,41 @@ const styles = StyleSheet.create({
     top: 0,
     height: "100%",
   },
+  wrapper: {
+    width: "90%",
+    marginTop: 20,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: colors.light_transparent,
+    borderRadius: 25,
+  },
   subtitle: {
     fontSize: 27,
     fontWeight: "bold",
-    color: colors.dark,
-    marginTop: 100,
+    color: colors.light,
     marginBottom: 20,
     marginLeft: 20,
+    marginTop: 10,
+  },
+  title: {
+    width: "100%",
+    fontSize: 35,
+    fontWeight: "bold",
+    color: colors.dark,
+    marginLeft: 20,
+    marginTop: 20,
   },
   button: {
-    width: "80%",
+    width: "60%",
     backgroundColor: colors.primary,
     padding: 20,
     marginTop: 25,
     borderRadius: 25,
+    shadowColor: "#000",
+    shadowOpacity: 0.5,
+    shadowOffset: { width: 0, height: 0 },
+    elevation: 4,
+    alignItems: "center",
   },
   image: {
     alignItems: "center",

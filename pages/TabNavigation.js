@@ -7,6 +7,7 @@ import WatchlistStack from "./WatchlistStack";
 import SearchStack from "./SearchStack";
 import Account from "./Account";
 import WatchHistoryStack from "./WatchHistoryStack";
+import DiscoverStack from "./DiscoverStack";
 
 const TabNavigation = () => {
   const Tab = createBottomTabNavigator();
@@ -27,6 +28,9 @@ const TabNavigation = () => {
               break;
             case "SearchStack":
               iconName = focused ? "magnify" : "magnify";
+              break;
+            case "DiscoverStack":
+              iconName = focused ? "movie-open" : "movie-open";
               break;
             case "Account":
               iconName = focused ? "account" : "account";
@@ -51,6 +55,11 @@ const TabNavigation = () => {
         name="SearchStack"
         options={styles.tab}
         component={SearchStack}
+      />
+      <Tab.Screen
+        name="DiscoverStack"
+        options={styles.tab}
+        component={DiscoverStack}
       />
       <Tab.Screen name="Account" options={styles.tab} component={Account} />
     </Tab.Navigator>

@@ -57,6 +57,7 @@ const styles = StyleSheet.create({
       height: 2,
     },
     shadowOpacity: 0.3,
+    elevation: 4,
   },
   image: {
     height: 250,
