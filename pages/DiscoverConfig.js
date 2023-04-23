@@ -63,7 +63,7 @@ const Discover = () => {
   const buildURL = () => {
     let url = "";
     if (type == "movie") {
-      url = `https://api.hemoviedb.org/3/discover/${type}?api_key=${TMDB_API_KEY}&language=en-US&vote_count.gte=250&sort_by=${sortBy}&include_adult=false&include_video=false&${
+      url = `https://api.themoviedb.org/3/discover/${type}?api_key=${TMDB_API_KEY}&language=en-US&vote_count.gte=250&sort_by=${sortBy}&include_adult=false&include_video=false&${
         releasedAfter ? `release_date.gte=${releasedAfter}` : ""
       }&page=1&with_genres=${genres.join(
         "|"

@@ -20,11 +20,13 @@ const Discover = ({ route }) => {
   const [json, setJson] = useState([]);
   const [filteredJson, setFilteredJson] = useState([]);
 
+  console.log(route.params.url);
+
   useEffect(() => {
     handleFetch();
   }, []);
 
-  const handleFetch = (event) => {
+  const handleFetch = () => {
     fetch(route.params.url)
       .then((response) => response.json())
       .then((jsonData) => {
