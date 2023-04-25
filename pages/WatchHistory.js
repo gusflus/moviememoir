@@ -12,6 +12,7 @@ import { useState, useEffect } from "react";
 import { auth, firestore } from "../Firebase";
 import { LinearGradient } from "expo-linear-gradient";
 import { useIsFocused } from "@react-navigation/native";
+import * as Haptics from "expo-haptics";
 
 import MediaCard from "../components/MediaCard";
 import Header from "../components/Header";
@@ -62,6 +63,8 @@ const WatchHistory = () => {
   };
 
   const handleRefresh = () => {
+    setRefreshing(true);
+    Haptics.notificationAsync(Haptics.NotificationFeedbackType.Light);
     firestore
       .collection("users")
       .doc(auth.currentUser.uid)

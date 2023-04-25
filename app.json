@@ -2,12 +2,15 @@
   "expo": {
     "name": "Movie Memoir",
     "slug": "MovieMemoir",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "orientation": "portrait",
     "userInterfaceStyle": "light",
+    "icon": "./assets/icon.png",
+    "scheme": "moviememoir",
     "splash": {
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "image": "./assets/splash.png",
+      "resizeMode": "cover",
+      "backgroundColor": "#2D2D2D"
     },
     "assetBundlePatterns": [
       "**/*"

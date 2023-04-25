@@ -7,20 +7,41 @@ import {
   Image,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
-import { auth } from "../Firebase";
+import { auth, firestore } from "../Firebase";
 import { useNavigation } from "@react-navigation/native";
+import { useState } from "react";
 import React from "react";
 
 import { colors } from "../components/Colors";
 import Header from "../components/Header";
+import BottomSheet from "../components/BottomSheet";
 
 const Account = () => {
   const navigation = useNavigation();
   const { height } = Dimensions.get("window");
+  const [sheet, setSheet] = useState(false);
 
   const handleSignOut = () => {
     auth.signOut();
     navigation.replace("Login");
+  };
+
+  const handleDeleteUser = () => {
+    firestore
+      .collection("users")
+      .doc(auth.currentUser.uid)
+      .delete()
+      .then(() => {
+        console.log("User data deleted");
+
+        auth.currentUser.delete(auth.currentUser.uid).then(() => {
+          console.log("User deleted");
+          navigation.replace("Login");
+        });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   return (
@@ -42,8 +63,17 @@ const Account = () => {
           >
             <Text>sign out</Text>
           </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => setSheet(true)}
+            style={[
+              styles.button,
+              { marginBottom: 15, marginTop: 0, backgroundColor: "#8a0000" },
+            ]}
+          >
+            <Text>delete account</Text>
+          </TouchableOpacity>
         </View>
-        <Text style={[styles.subtitle, { marginTop: 100, marginBottom: 10 }]}>
+        <Text style={[styles.subtitle, { marginTop: 50, marginBottom: 10 }]}>
           Data Credits:
         </Text>
         <Image
@@ -64,6 +94,32 @@ const Account = () => {
           {"Streaming data courtesy of JustWatch"}
         </Text>
       </View>
+      <BottomSheet
+        isOpen={sheet}
+        close={() => setSheet(false)}
+        height={200}
+        children={
+          <View>
+            <Text style={{ textAlign: "center" }}>
+              Are you sure you want to delete your account? This action is
+              irreversible.
+            </Text>
+            <TouchableOpacity
+              onPress={handleDeleteUser}
+              style={[
+                styles.button,
+                {
+                  marginBottom: 15,
+                  alignSelf: "center",
+                  backgroundColor: "#ad0202",
+                },
+              ]}
+            >
+              <Text>delete account</Text>
+            </TouchableOpacity>
+          </View>
+        }
+      />
     </>
   );
 };

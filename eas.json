@@ -23,6 +23,12 @@
     }
   },
   "submit": {
-    "production": {}
+    "production": {
+      "ios": {
+        "appleId": "gus.flusser@gmail.com",
+        "ascAppId": "6448244072",
+        "appleTeamId": "2R7677PW64"
+      }
+    }
   }
 }

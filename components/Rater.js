@@ -1,6 +1,7 @@
 import { MaterialCommunityIcons, FontAwesome } from "@expo/vector-icons";
 import React from "react";
 import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
+import * as Haptics from "expo-haptics";
 
 import { colors } from "./Colors";
 
@@ -53,7 +54,10 @@ const Rater = ({ onRate }) => {
     const y = CONTENT_RADIUS * Math.sin(angle * (Math.PI / 180));
     return (
       <TouchableOpacity
-        onPress={() => setRating(index)}
+        onPress={() => {
+          setRating(index);
+          Haptics.notificationAsync(Haptics.NotificationFeedbackType.Light);
+        }}
         style={[
           styles.content,
           {
@@ -91,7 +95,10 @@ const Rater = ({ onRate }) => {
     <View style={styles.container}>
       {contents}
       <TouchableOpacity
-        onPress={() => onRate(rating)}
+        onPress={() => {
+          Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+          onRate(rating);
+        }}
         style={[
           styles.button,
           {
@@ -102,7 +109,10 @@ const Rater = ({ onRate }) => {
         <Text style={styles.contentText}>{`Rate ${rating}`}</Text>
       </TouchableOpacity>
       <TouchableOpacity
-        onPress={() => onRate(null)}
+        onPress={() => {
+          Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
+          onRate(null);
+        }}
         style={[
           styles.button,
           {
