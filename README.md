@@ -1,6 +1,6 @@
-## Movie Memoir - ios Application
+###Movie Memoir - ios Application
 
-
+![readme 001](https://user-images.githubusercontent.com/71744963/234707122-d840ef61-8e5e-48fb-86d8-3a8b63d81f75.png)
 
 The best way to keep track of the movies you want to and have seen! Equipped with an elegant user interface that allows you to discover movies and TV shows that you will love.
 
