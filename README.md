@@ -1,6 +1,7 @@
 Movie Memoir - ios Application
 
-<img src="(https://user-images.githubusercontent.com/71744963/234703741-3d212911-45da-4528-b248-55b423adf415.png)" width=100 height=100 />
+<img src="https://user-images.githubusercontent.com/71744963/234703741-3d212911-45da-4528-b248-55b423adf415.png" width=100 height=100 />
+
 ![6 7_3](https://user-images.githubusercontent.com/71744963/234703743-bc688b31-3222-4997-8a1d-abb5b43f7a97.png)
 ![6 7_4](https://user-images.githubusercontent.com/71744963/234703746-0e65ca1a-f6c4-4e4d-84cd-39f2e892c973.png)
 ![6 7_5](https://user-images.githubusercontent.com/71744963/234703749-a93665b6-5b1a-4839-9df4-8b8ffc34a675.png)
