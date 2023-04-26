@@ -37,7 +37,7 @@ const WatchHistory = () => {
     setFilteredJson(json);
   }, [json]);
 
-  const handleFetch = (id, type, rating, date) => {
+  const handleFetch = async (id, type, rating, date) => {
     let url;
     switch (type) {
       case "movie":
@@ -51,48 +51,54 @@ const WatchHistory = () => {
         break;
     }
 
-    fetch(url)
-      .then((response) => response.json())
-      .then((jsonData) => {
-        const media = {
-          jsonData,
-          media_type: type,
-          rating: rating,
-          date: date,
-        };
-        if (!json.some((item) => item.jsonData.id === media.jsonData.id)) {
-          setJson((json) => [...json, media]);
-        }
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+    try {
+      const response = await fetch(url);
+      const jsonData = await response.json();
+      const media = {
+        jsonData,
+        media_type: type,
+        rating: rating,
+        date: date,
+      };
+      return media;
+    } catch (error) {
+      console.error(error);
+    }
   };
 
-  const handleRefresh = (auto = false) => {
+  const handleRefresh = async (auto = false) => {
     if (!auto) {
       setRefreshing(true);
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Light);
     }
 
-    firestore
-      .collection("users")
-      .doc(auth.currentUser.uid)
-      .collection("watched")
-      .get()
-      .then((querySnapshot) => {
-        querySnapshot.forEach((watchedMedia) => {
-          handleFetch(
-            watchedMedia.data().id,
-            watchedMedia.data().type,
-            watchedMedia.data().rating,
-            watchedMedia.data().date
-          );
-        });
-      })
-      .catch((error) => {
-        console.log(error);
+    try {
+      const querySnapshot = await firestore
+        .collection("users")
+        .doc(auth.currentUser.uid)
+        .collection("watched")
+        .get();
+      const mediaPromises = [];
+      querySnapshot.forEach((watchedMedia) => {
+        const mediaPromise = handleFetch(
+          watchedMedia.data().id,
+          watchedMedia.data().type,
+          watchedMedia.data().rating,
+          watchedMedia.data().date
+        );
+        mediaPromises.push(mediaPromise);
       });
+      const mediaArray = await Promise.all(mediaPromises);
+      const uniqueMedia = mediaArray.filter((media, index, self) => {
+        return (
+          index === self.findIndex((m) => m.jsonData.id === media.jsonData.id)
+        );
+      });
+      setJson(uniqueMedia);
+      setFilteredJson(uniqueMedia);
+    } catch (error) {
+      console.log(error);
+    }
 
     setRefreshing(false);
   };
