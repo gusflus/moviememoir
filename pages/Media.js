@@ -298,6 +298,9 @@ const Media = ({ route }) => {
   };
 
   const handleRating = (rating) => {
+    date = new Date();
+    formattedDate = date.toISOString();
+
     console.log("rating: " + rating);
     handleRemoveFromWatchlist();
     setSheet(false);
@@ -314,6 +317,7 @@ const Media = ({ route }) => {
           rating: rating,
           type: route.params.type,
           id: String(json.id),
+          date: formattedDate,
         })
         .then(() => {
           console.log("added to watched");

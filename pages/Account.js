@@ -30,17 +30,36 @@ const Account = () => {
     firestore
       .collection("users")
       .doc(auth.currentUser.uid)
+      .collection("watchlist")
       .delete()
       .then(() => {
-        console.log("User data deleted");
-
-        auth.currentUser.delete(auth.currentUser.uid).then(() => {
-          console.log("User deleted");
-          navigation.replace("Login");
-        });
-      })
-      .catch((error) => {
-        console.log(error);
+        firestore
+          .collection("users")
+          .doc(auth.currentUser.uid)
+          .collection("watched")
+          .delete()
+          .then(() => {
+            firestore
+              .collection("users")
+              .doc(auth.currentUser.uid)
+              .delete()
+              .then(() => {
+                console.log("User data deleted");
+                auth.currentUser.delete(auth.currentUser.uid).then(() => {
+                  console.log("User deleted");
+                  navigation.replace("Login");
+                });
+              })
+              .catch((error) => {
+                console.log(error);
+              })
+              .catch((error) => {
+                console.log(error);
+              });
+          })
+          .catch((error) => {
+            console.log(error);
+          });
       });
   };
 

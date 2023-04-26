@@ -28,7 +28,7 @@ const Watchlist = () => {
   const [filteredJson, setFilteredJson] = useState([]);
 
   useEffect(() => {
-    handleRefresh();
+    handleRefresh(true);
   }, [isFocused]);
 
   useEffect(() => {
@@ -62,9 +62,12 @@ const Watchlist = () => {
       });
   };
 
-  const handleRefresh = () => {
-    setRefreshing(true);
-    Haptics.notificationAsync(Haptics.NotificationFeedbackType.Light);
+  const handleRefresh = (auto = false) => {
+    if (!auto) {
+      setRefreshing(true);
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Light);
+    }
+
     firestore
       .collection("users")
       .doc(auth.currentUser.uid)

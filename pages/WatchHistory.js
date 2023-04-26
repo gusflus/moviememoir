@@ -6,6 +6,7 @@ import {
   TouchableWithoutFeedback,
   ScrollView,
   RefreshControl,
+  TouchableOpacity,
 } from "react-native";
 import React from "react";
 import { useState, useEffect } from "react";
@@ -26,16 +27,17 @@ const WatchHistory = () => {
   const [refreshing, setRefreshing] = useState(false);
   const [json, setJson] = useState([]);
   const [filteredJson, setFilteredJson] = useState([]);
+  const [displayMethod, setDisplayMethod] = useState("by rating");
 
   useEffect(() => {
-    handleRefresh();
+    handleRefresh(true);
   }, [isFocused]);
 
   useEffect(() => {
     setFilteredJson(json);
   }, [json]);
 
-  const handleFetch = (id, type, rating) => {
+  const handleFetch = (id, type, rating, date) => {
     let url;
     switch (type) {
       case "movie":
@@ -52,7 +54,12 @@ const WatchHistory = () => {
     fetch(url)
       .then((response) => response.json())
       .then((jsonData) => {
-        const media = { jsonData, media_type: type, rating: rating };
+        const media = {
+          jsonData,
+          media_type: type,
+          rating: rating,
+          date: date,
+        };
         if (!json.some((item) => item.jsonData.id === media.jsonData.id)) {
           setJson((json) => [...json, media]);
         }
@@ -62,9 +69,12 @@ const WatchHistory = () => {
       });
   };
 
-  const handleRefresh = () => {
-    setRefreshing(true);
-    Haptics.notificationAsync(Haptics.NotificationFeedbackType.Light);
+  const handleRefresh = (auto = false) => {
+    if (!auto) {
+      setRefreshing(true);
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Light);
+    }
+
     firestore
       .collection("users")
       .doc(auth.currentUser.uid)
@@ -75,7 +85,8 @@ const WatchHistory = () => {
           handleFetch(
             watchedMedia.data().id,
             watchedMedia.data().type,
-            watchedMedia.data().rating
+            watchedMedia.data().rating,
+            watchedMedia.data().date
           );
         });
       })
@@ -107,6 +118,14 @@ const WatchHistory = () => {
     }
     return acc;
   }, {});
+
+  const readableDate = (date) => {
+    const dateObj = new Date(date);
+    const month = dateObj.toLocaleString("default", { month: "long" });
+    const day = dateObj.getDate();
+    const year = dateObj.getFullYear();
+    return `${month} ${day}, ${year}`;
+  };
 
   const getColorFromRating = (rating) => {
     const value = rating / 10;
@@ -144,6 +163,53 @@ const WatchHistory = () => {
     return `rgba(${color[0]}, ${color[1]}, ${color[2]}, 0.33)`;
   };
 
+  const byRatingView = () => {
+    return Object.keys(mediaCardsByRating)
+      .sort((a, b) => b - a)
+      .map((rating) => (
+        <View
+          style={[
+            styles.ratingContainer,
+            { backgroundColor: getColorFromRating(rating) },
+          ]}
+          key={rating}
+        >
+          <Text style={styles.ratingTitle}>Rated {rating}:</Text>
+          <View style={styles.horizontal}>
+            {mediaCardsByRating[rating].map((json) => (
+              <MediaCard
+                id={json.jsonData.id}
+                image={json.jsonData.poster_path}
+                type={json.media_type}
+                key={json.jsonData.id}
+              />
+            ))}
+          </View>
+        </View>
+      ));
+  };
+
+  const byDateView = () => {
+    const sortedJson = filteredJson.sort((a, b) => {
+      console.log(a.date);
+      const dateA = new Date(a.date);
+      const dateB = new Date(b.date);
+      return dateB - dateA;
+    });
+
+    return sortedJson.map((json) => (
+      <View key={json.jsonData.id}>
+        <MediaCard
+          id={json.jsonData.id}
+          image={json.jsonData.poster_path}
+          type={json.media_type}
+          key={json.jsonData.id}
+        />
+        <Text style={styles.date}>{readableDate(json.date)}</Text>
+      </View>
+    ));
+  };
+
   if (json == null) {
     return;
   }
@@ -173,30 +239,25 @@ const WatchHistory = () => {
           >
             <Searchbar onChangeText={handleSearch} />
             <View style={styles.wrapper}>
-              <Text style={styles.subtitle}>Your Ratings:</Text>
-              {Object.keys(mediaCardsByRating)
-                .sort((a, b) => b - a)
-                .map((rating) => (
-                  <View
-                    style={[
-                      styles.ratingContainer,
-                      { backgroundColor: getColorFromRating(rating) },
-                    ]}
-                    key={rating}
-                  >
-                    <Text style={styles.ratingTitle}>Rated {rating}:</Text>
-                    <View style={styles.horizontal}>
-                      {mediaCardsByRating[rating].map((json) => (
-                        <MediaCard
-                          id={json.jsonData.id}
-                          image={json.jsonData.poster_path}
-                          type={json.media_type}
-                          key={json.jsonData.id}
-                        />
-                      ))}
-                    </View>
-                  </View>
-                ))}
+              <View style={styles.horizontal}>
+                <Text style={styles.subtitle}>Your Ratings:</Text>
+                <TouchableOpacity
+                  style={styles.button}
+                  onPress={() => {
+                    Haptics.notificationAsync(
+                      Haptics.NotificationFeedbackType.Light
+                    );
+                    if (displayMethod === "by rating") {
+                      setDisplayMethod("by timeline");
+                    } else {
+                      setDisplayMethod("by rating");
+                    }
+                  }}
+                >
+                  <Text style={styles.buttonText}>{displayMethod}</Text>
+                </TouchableOpacity>
+              </View>
+              {displayMethod === "by rating" ? byRatingView() : byDateView()}
             </View>
           </ScrollView>
         </>
@@ -229,12 +290,24 @@ const styles = StyleSheet.create({
     justifyContent: "space-evenly",
   },
   subtitle: {
-    width: "100%",
     fontSize: 35,
     fontWeight: "bold",
     color: colors.dark,
-    marginLeft: 40,
+    marginLeft: 0,
     marginTop: 10,
+  },
+  button: {
+    width: "35%",
+    backgroundColor: colors.secondary,
+    alignItems: "center",
+    justifyContent: "center",
+    padding: 20,
+    margin: 5,
+    borderRadius: 25,
+  },
+  buttonText: {
+    fontSize: 14,
+    fontWeight: "bold",
   },
   ratingContainer: {
     width: "96%",
@@ -243,6 +316,13 @@ const styles = StyleSheet.create({
     marginTop: 25,
     paddingBottom: 5,
     borderRadius: 20,
+  },
+  date: {
+    textAlign: "center",
+    fontSize: 20,
+    fontWeight: "bold",
+    color: colors.light,
+    marginTop: 10,
   },
   ratingTitle: {
     alignSelf: "flex-start",
