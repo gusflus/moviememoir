@@ -1,6 +1,7 @@
 import { StyleSheet, Text, View } from "react-native";
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { auth } from "../Firebase";
 
 import Icon from "../components/Icon";
 import WatchlistStack from "./WatchlistStack";
@@ -8,6 +9,7 @@ import SearchStack from "./SearchStack";
 import Account from "./Account";
 import WatchHistoryStack from "./WatchHistoryStack";
 import DiscoverStack from "./DiscoverStack";
+import AccountWall from "./AccountWall";
 
 const TabNavigation = () => {
   const Tab = createBottomTabNavigator();
@@ -44,12 +46,14 @@ const TabNavigation = () => {
       <Tab.Screen
         name="WatchlistStack"
         options={styles.tab}
-        component={WatchlistStack}
+        component={!auth.currentUser.isAnonymous ? WatchlistStack : AccountWall}
       />
       <Tab.Screen
         name="WatchHistoryStack"
         options={styles.tab}
-        component={WatchHistoryStack}
+        component={
+          !auth.currentUser.isAnonymous ? WatchHistoryStack : AccountWall
+        }
       />
       <Tab.Screen
         name="SearchStack"
@@ -59,9 +63,13 @@ const TabNavigation = () => {
       <Tab.Screen
         name="DiscoverStack"
         options={styles.tab}
-        component={DiscoverStack}
+        component={!auth.currentUser.isAnonymous ? DiscoverStack : AccountWall}
       />
-      <Tab.Screen name="Account" options={styles.tab} component={Account} />
+      <Tab.Screen
+        name="Account"
+        options={styles.tab}
+        component={!auth.currentUser.isAnonymous ? Account : AccountWall}
+      />
     </Tab.Navigator>
   );
 };

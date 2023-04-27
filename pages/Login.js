@@ -52,6 +52,15 @@ const Login = () => {
       .catch((error) => alert(error.message));
   };
 
+  const handleLoginAnonymously = () => {
+    auth
+      .signInAnonymously()
+      .then(() => {
+        console.log("logged in anonymously");
+      })
+      .catch((error) => alert(error.message));
+  };
+
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View style={styles.container}>
@@ -83,6 +92,13 @@ const Login = () => {
               style={[styles.button, styles.buttonOutline]}
             >
               <Text style={styles.buttonText}>Register</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              onPress={handleLoginAnonymously}
+              style={[styles.button, styles.buttonOutline]}
+            >
+              <Text style={styles.buttonText}>Guest</Text>
             </TouchableOpacity>
           </View>
         </View>

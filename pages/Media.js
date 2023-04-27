@@ -536,33 +536,35 @@ const Media = ({ route }) => {
               />
             </View>
           </View>
-          <View style={styles.buttonContainer}>
-            <View
-              style={[
-                styles.horizontal,
-                { justifyContent: "space-between", alignItems: "center" },
-              ]}
-            >
-              <TouchableOpacity
-                onPress={
-                  isInWatched
-                    ? handleRemoveFromWatchlist
-                    : handlePushToWatchlist
-                }
-                style={styles.button}
+          {auth.currentUser.isAnonymous ? null : (
+            <View style={styles.buttonContainer}>
+              <View
+                style={[
+                  styles.horizontal,
+                  { justifyContent: "space-between", alignItems: "center" },
+                ]}
               >
-                <Text>
-                  {isInWatched ? "Remove from Watchlist" : "Add to Watchlist"}
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => setSheet(true)}
-                style={styles.button}
-              >
-                <Text>{hasBeenRated ? "Rate again" : "Rate"}</Text>
-              </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={
+                    isInWatched
+                      ? handleRemoveFromWatchlist
+                      : handlePushToWatchlist
+                  }
+                  style={styles.button}
+                >
+                  <Text>
+                    {isInWatched ? "Remove from Watchlist" : "Add to Watchlist"}
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => setSheet(true)}
+                  style={styles.button}
+                >
+                  <Text>{hasBeenRated ? "Rate again" : "Rate"}</Text>
+                </TouchableOpacity>
+              </View>
             </View>
-          </View>
+          )}
           <TextBox title="Overview:" text={json.overview} />
         </View>
         <View style={[styles.cardContainer, { marginBottom: 0 }]}>
