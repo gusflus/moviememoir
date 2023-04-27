@@ -35,7 +35,7 @@ const Watchlist = () => {
     setFilteredJson(json);
   }, [json]);
 
-  const handleFetch = (id, type) => {
+  const handleFetch = async (id, type) => {
     let url;
     switch (type) {
       case "movie":
@@ -49,38 +49,48 @@ const Watchlist = () => {
         break;
     }
 
-    fetch(url)
-      .then((response) => response.json())
-      .then((jsonData) => {
-        const media = { jsonData, media_type: type };
-        if (!json.some((item) => item.jsonData.id === media.jsonData.id)) {
-          setJson((json) => [...json, media]);
-        }
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+    try {
+      const response = await fetch(url);
+      const jsonData = await response.json();
+      const media = { jsonData, media_type: type };
+      return media;
+    } catch (error) {
+      console.error(error);
+    }
   };
 
-  const handleRefresh = (auto = false) => {
+  const handleRefresh = async (auto = false) => {
     if (!auto) {
       setRefreshing(true);
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Light);
     }
 
-    firestore
-      .collection("users")
-      .doc(auth.currentUser.uid)
-      .collection("watchlist")
-      .get()
-      .then((querySnapshot) => {
-        querySnapshot.forEach((watchedMedia) => {
-          handleFetch(watchedMedia.data().id, watchedMedia.data().type);
-        });
-      })
-      .catch((error) => {
-        console.log(error);
+    try {
+      const querySnapshot = await firestore
+        .collection("users")
+        .doc(auth.currentUser.uid)
+        .collection("watchlist")
+        .get();
+      const mediaPromises = [];
+      querySnapshot.forEach((watchedMedia) => {
+        const mediaPromise = handleFetch(
+          watchedMedia.data().id,
+          watchedMedia.data().type
+        );
+        mediaPromises.push(mediaPromise);
       });
+      const mediaArray = await Promise.all(mediaPromises);
+      const uniqueMedia = mediaArray.filter((media, index, self) => {
+        return (
+          index === self.findIndex((m) => m.jsonData.id === media.jsonData.id)
+        );
+      });
+      setJson(uniqueMedia);
+      setFilteredJson(uniqueMedia);
+    } catch (error) {
+      console.log(error);
+    }
+
     setRefreshing(false);
   };
 
@@ -97,11 +107,7 @@ const Watchlist = () => {
   };
 
   if (json == null) {
-    return (
-      <View style={styles.container}>
-        <Text style={{ color: colors.dark }}>Loading...</Text>
-      </View>
-    );
+    return;
   }
 
   return (

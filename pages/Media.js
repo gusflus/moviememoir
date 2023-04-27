@@ -210,7 +210,7 @@ const Media = ({ route }) => {
     firestore
       .collection("users")
       .doc(auth.currentUser.uid)
-      .collection("watchlisted")
+      .collection("watchlist")
       .doc(String(json.id))
       .get()
       .then((doc) => {
@@ -320,7 +320,6 @@ const Media = ({ route }) => {
           date: formattedDate,
         })
         .then(() => {
-          console.log("added to watched");
           setIsInWatched(true);
         })
         .catch((error) => {
