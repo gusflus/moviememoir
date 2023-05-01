@@ -7,6 +7,7 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   Image,
+  SafeAreaView,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { useState, useEffect } from "react";
@@ -63,7 +64,7 @@ const Login = () => {
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <View style={styles.container}>
+      <SafeAreaView style={styles.container}>
         <Image
           source={require("../assets/title.png")}
           style={styles.imageContainer}
@@ -86,23 +87,24 @@ const Login = () => {
             <TouchableOpacity onPress={handleLogin} style={styles.button}>
               <Text style={styles.buttonText}>Login</Text>
             </TouchableOpacity>
+          </View>
 
+          <View style={styles.horizontal}>
             <TouchableOpacity
               onPress={handleSignup}
-              style={[styles.button, styles.buttonOutline]}
+              style={[styles.halfButton, styles.buttonOutline]}
             >
               <Text style={styles.buttonText}>Register</Text>
             </TouchableOpacity>
-
             <TouchableOpacity
               onPress={handleLoginAnonymously}
-              style={[styles.button, styles.buttonOutline]}
+              style={[styles.halfButton, styles.buttonOutline]}
             >
               <Text style={styles.buttonText}>Guest</Text>
             </TouchableOpacity>
           </View>
         </View>
-      </View>
+      </SafeAreaView>
     </TouchableWithoutFeedback>
   );
 };
@@ -119,8 +121,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     width: "75%",
     resizeMode: "contain",
-    marginTop: 90,
-    marginBottom: 20,
+    marginBottom: "5%",
   },
   inputContainer: {
     alignItems: "center",
@@ -135,9 +136,19 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     width: "80%",
-    marginTop: 50,
+    marginTop: "15%",
   },
   button: {
+    backgroundColor: colors.primary,
+    borderColor: colors.primary,
+    alignItems: "center",
+    padding: 20,
+    margin: 5,
+    borderWidth: 5,
+    borderRadius: 25,
+  },
+  halfButton: {
+    width: "37%",
     backgroundColor: colors.primary,
     borderColor: colors.primary,
     alignItems: "center",
@@ -154,5 +165,8 @@ const styles = StyleSheet.create({
   buttonText: {
     fontSize: 14,
     fontWeight: "bold",
+  },
+  horizontal: {
+    flexDirection: "row",
   },
 });

@@ -20,17 +20,13 @@ export default function Header(props) {
             color={colors.primary}
           />
         </TouchableOpacity>
-        <Text adjustsFontSizeToFit numberOfLines={1} style={styles.title}>
-          {props.title}
-        </Text>
+        <Text style={styles.title}>{props.title}</Text>
       </View>
     );
   }
   return (
     <View style={styles.headerNoButton}>
       <Text
-        adjustsFontSizeToFit
-        numberOfLines={1}
         style={[
           styles.title,
           {
@@ -47,22 +43,22 @@ export default function Header(props) {
 const styles = StyleSheet.create({
   backButton: {
     marginLeft: 15,
-    marginTop: 73,
+    marginTop: "15%",
     width: 40,
     height: 40,
     borderRadius: 20,
   },
   title: {
-    marginTop: 73,
+    marginTop: "15%",
     fontSize: 27,
     fontWeight: "bold",
     color: colors.primary,
     justifyContent: "center",
+    flexWrap: "wrap",
   },
   header: {
     flexDirection: "row",
     width: "100%",
-    height: 130,
     backgroundColor: colors.dark,
     shadowColor: "#000",
     shadowOffset: {
@@ -71,10 +67,10 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.33,
     elevation: 4,
+    paddingBottom: 20,
   },
   headerNoButton: {
     width: "100%",
-    height: 130,
     backgroundColor: colors.dark,
     shadowColor: "#000",
     shadowOffset: {
@@ -83,5 +79,6 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.33,
     elevation: 4,
+    paddingBottom: 20,
   },
 });
