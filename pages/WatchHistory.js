@@ -316,7 +316,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   ratingContainer: {
-    width: "96%",
+    width: "97%",
     alignItems: "flex-start",
     justifyContent: "center",
     marginTop: 25,

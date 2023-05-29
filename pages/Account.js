@@ -55,7 +55,6 @@ const Account = () => {
       <Text style={styles.title}>Information:</Text>
       <View style={[styles.container, { height: height - 130 }]}>
         <View style={styles.wrapper}>
-          <Text style={styles.subtitle}>User: {auth.currentUser.email}</Text>
           <TouchableOpacity
             onPress={handleSignOut}
             style={[styles.button, { marginBottom: 15 }]}
@@ -165,7 +164,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   button: {
-    width: "60%",
+    width: "90%",
     backgroundColor: colors.primary,
     padding: 20,
     marginTop: 25,
