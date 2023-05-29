@@ -6,6 +6,7 @@ import { auth } from "./Firebase";
 
 import TabNavigation from "./pages/TabNavigation";
 import Login from "./pages/Login";
+import NoInternet from "./pages/NoInternet";
 
 const Stack = createNativeStackNavigator();
 
@@ -26,23 +27,19 @@ const App = () => {
     return unsubscrbe;
   }, []);
 
-  return (
-    <NavigationContainer>
-      <Stack.Navigator
-        initialRouteName={loginCheck ? "TabNavigation" : "Login"}
-      >
-        <Stack.Screen
-          name="TabNavigation"
-          component={TabNavigation}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="Login"
-          component={Login}
-          options={{ headerShown: false }}
-        />
-      </Stack.Navigator>
-    </NavigationContainer>
+  return loginCheck != undefined ? (
+    loginCheck ? (
+      <NavigationContainer>
+        <Stack.Navigator screenOptions={{ headerShown: false }}>
+          <Stack.Screen name="TabNavigation" component={TabNavigation} />
+          <Stack.Screen name="Login" component={Login} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    ) : (
+      <Login />
+    )
+  ) : (
+    <NoInternet />
   );
 };
 

@@ -15,20 +15,8 @@ import { auth, firestore } from "../Firebase";
 import { colors } from "../components/Colors";
 
 const Login = () => {
-  const navigation = useNavigation();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
-  useEffect(() => {
-    const unsubscrbe = auth.onAuthStateChanged((user) => {
-      if (user) {
-        console.log("authStateChanged -> logged in: " + user.email);
-        navigation.replace("TabNavigation");
-      }
-    });
-
-    return unsubscrbe;
-  }, []);
 
   const handleSignup = () => {
     auth
@@ -48,7 +36,7 @@ const Login = () => {
       .signInWithEmailAndPassword(email, password)
       .then((userCredentials) => {
         const user = userCredentials.user;
-        console.log("logged in: " + user.email);
+        console.log("logged in: " + user?.uid);
       })
       .catch((error) => alert(error.message));
   };
