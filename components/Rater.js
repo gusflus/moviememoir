@@ -73,15 +73,15 @@ const Rater = ({ onRate }) => {
         {index == 0 || index == 10 ? (
           <MaterialCommunityIcons
             name={index == 0 ? "star-outline" : "star-face"}
-            size={index == 0 || index == 10 ? 45 : 34}
+            size={45}
             color={index == 0 ? "#000" : "#12D600"}
-            style={{ margin: index == 0 || index == 10 ? -10 : 0 }}
+            style={{ margin: -10 }}
           />
         ) : (
           <FontAwesome
             name="star"
-            size={34}
-            color={index <= rating ? colors.primary : colors.secondary}
+            size={30}
+            color={index <= rating ? "#FFB300" : colors.secondary}
             style={{ margin: 0 }}
           />
         )}
@@ -143,11 +143,12 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   button: {
-    width: 110,
-    height: 70,
+    width: 90,
+    height: 50,
     borderRadius: 35,
     alignItems: "center",
     justifyContent: "center",
+    marginBottom: 10,
   },
   contentText: {
     fontSize: 14,

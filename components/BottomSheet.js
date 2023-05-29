@@ -55,13 +55,14 @@ const BottomSheet = ({ children, height = 250, isOpen, close }) => {
 const styles = StyleSheet.create({
   container: {
     position: "absolute",
+    alignItems: "center",
     bottom: 0,
     left: 0,
     right: 0,
     backgroundColor: "#fff",
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
-    padding: 20,
+    padding: "5%",
   },
   children: {
     width: "100%",
