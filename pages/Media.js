@@ -421,7 +421,7 @@ const Media = ({ route }) => {
       const date = json.release_date;
       return (
         <Text style={styles.info}>
-          {`Released: ${intToMonth(date.substring(5, 7))} ${date.substring(
+          {`Release Date: ${intToMonth(date.substring(5, 7))} ${date.substring(
             8
           )}, ${date.substring(0, 4)}`}
         </Text>

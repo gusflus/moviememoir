@@ -331,7 +331,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   ratingTitle: {
-    alignSelf: "flex-start",
+    alignSelf: "center",
     marginLeft: 10,
     marginTop: 10,
     fontSize: 25,

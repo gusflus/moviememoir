@@ -72,31 +72,34 @@ const Account = () => {
             <Text>delete account</Text>
           </TouchableOpacity>
         </View>
-        <Text style={[styles.subtitle, { marginTop: 50, marginBottom: 10 }]}>
-          Data Credits:
-        </Text>
-        <Image
-          source={require("../assets/TMDB_att.png")}
-          style={styles.image}
-        />
+        <View style={styles.horizonal}>
+          <Image
+            source={require("../assets/TMDB_att.png")}
+            style={styles.image}
+          />
+          <Image
+            source={require("../assets/JW_att.png")}
+            style={styles.image}
+          />
+        </View>
         <Text
-          style={{
-            textAlign: "center",
-            marginTop: 25,
-            color: "#90cea1",
-          }}
+          style={[
+            styles.description,
+            {
+              color: "#90cea1",
+            },
+          ]}
         >
           {"Movie, TV, and people data courtesy of\nThe Movie Database"}
         </Text>
-        <Image source={require("../assets/JW_att.png")} style={styles.image} />
-        <Text style={{ color: "#FFCE2E" }}>
+        <Text style={[styles.description, { color: "#FFCE2E" }]}>
           {"Streaming data courtesy of JustWatch"}
         </Text>
       </View>
       <BottomSheet
         isOpen={sheet}
         close={() => setSheet(false)}
-        height={200}
+        height={250}
         children={
           <View>
             <Text style={{ textAlign: "center" }}>
@@ -173,10 +176,24 @@ const styles = StyleSheet.create({
     elevation: 4,
     alignItems: "center",
   },
+  horizonal: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    width: "100%",
+    alignItems: "center",
+  },
   image: {
     alignItems: "center",
-    width: "75%",
+    width: "40%",
     resizeMode: "contain",
     marginTop: 25,
+  },
+  description: {
+    width: "90%",
+    textAlign: "center",
+    fontSize: 12,
+    marginTop: 10,
+    marginBottom: 20,
+    marginLeft: 20,
   },
 });
