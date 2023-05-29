@@ -46,7 +46,7 @@ const BottomSheet = ({ children, height = 250, isOpen, close }) => {
           { height: height, transform: [{ translateY: translateY }] },
         ]}
       >
-        {children}
+        <View style={styles.children}>{children}</View>
       </Animated.View>
     </>
   );
@@ -62,6 +62,11 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     padding: 20,
+  },
+  children: {
+    width: "100%",
+    height: "80%",
+    justifyContent: "flex-start",
   },
 });
 

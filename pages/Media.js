@@ -614,7 +614,7 @@ const Media = ({ route }) => {
       <BottomSheet
         isOpen={sheet}
         close={() => setSheet(false)}
-        height={250}
+        height={300}
         children={<Rater onRate={handleRating} />}
       />
     </>
