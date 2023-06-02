@@ -15,7 +15,8 @@
     "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": false,
-      "bundleIdentifier": "com.gusflus.moviememoir"
+      "bundleIdentifier": "com.gusflus.moviememoir",
+      "buildNumber": "5"
     },
     "android": {
       "adaptiveIcon": {

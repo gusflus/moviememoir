@@ -27,20 +27,20 @@ const App = () => {
     return unsubscrbe;
   }, []);
 
-  return loginCheck != undefined ? (
-    loginCheck ? (
+  if (loginCheck != undefined && loginCheck) {
+    return (
       <NavigationContainer>
         <Stack.Navigator screenOptions={{ headerShown: false }}>
           <Stack.Screen name="TabNavigation" component={TabNavigation} />
           <Stack.Screen name="Login" component={Login} />
         </Stack.Navigator>
       </NavigationContainer>
-    ) : (
-      <Login />
-    )
-  ) : (
-    <NoInternet />
-  );
+    );
+  } else if (loginCheck != undefined && !loginCheck) {
+    return <Login />;
+  } else {
+    return <NoInternet />;
+  }
 };
 
 export default App;

@@ -19,6 +19,11 @@ const Login = () => {
   const [password, setPassword] = useState("");
 
   const handleSignup = () => {
+    if (email == "" || password == "") {
+      alert("Please enter a valid email and password");
+      return;
+    }
+
     auth
       .createUserWithEmailAndPassword(email, password)
       .then((userCredentials) => {
